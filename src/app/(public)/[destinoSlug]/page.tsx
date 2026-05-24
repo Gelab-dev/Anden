@@ -6,6 +6,11 @@ interface PageProps {
   params: Promise<{ destinoSlug: string }>;
 }
 
+type ActivityWithRelations = Awaited<ReturnType<typeof prisma.activity.findMany>>[number] & {
+  categories: { category: { id: string; name: string } }[];
+  provider: { name: string; whatsapp: string | null } | null;
+};
+
 export async function generateMetadata({ params }: PageProps) {
   const { destinoSlug } = await params;
   const destino = await prisma.destination.findUnique({
@@ -45,7 +50,7 @@ export default async function DestinoPage({ params }: PageProps) {
 
   if (!destino) notFound();
 
-  const activitiesData = destino.activities.map((activity) => ({
+  const activitiesData = (destino.activities as ActivityWithRelations[]).map((activity) => ({
     id: activity.id,
     slug: activity.slug,
     title: activity.title,
