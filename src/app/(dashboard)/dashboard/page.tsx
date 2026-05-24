@@ -4,7 +4,16 @@ import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { ActivityStatusSelector } from '@/components/activity-status-selector';
 
-
+type Activity = {
+  id: string;
+  title: string;
+  status: string;
+  statusNote: string | null;
+  isPublished: boolean;
+  viewCount: number | null;
+  whatsappClickCount: number | null;
+  createdAt: Date;
+};
 
 function ProviderStatusBanner({ status }: { status: string }) {
   if (status !== 'PENDING') return null;
@@ -41,6 +50,8 @@ export default async function DashboardPage() {
     },
   });
 
+  const activities: Activity[] = provider?.activities ?? [];
+
   return (
     <main className="max-w-7xl mx-auto px-6 md:px-12 py-12">
 
@@ -70,7 +81,6 @@ export default async function DashboardPage() {
       {/* Con perfil */}
       {provider && (
         <>
-          {/* Banner verificación */}
           <ProviderStatusBanner status={provider.status} />
 
           {/* Header */}
@@ -103,26 +113,26 @@ export default async function DashboardPage() {
             </Link>
           </div>
 
-          {/* Stats rápidas */}
+          {/* Stats */}
           <div
             className="grid grid-cols-2 md:grid-cols-4 gap-px mb-12"
             style={{ background: 'var(--color-surface-border)' }}
           >
             {[
               {
-                valor: provider.activities.length,
+                valor: activities.length,
                 label: 'Actividades',
               },
               {
-                valor: provider.activities.filter((a: { isPublished: boolean }) => a.isPublished).length,
+                valor: activities.filter((a) => a.isPublished).length,
                 label: 'Publicadas',
               },
               {
-                valor: provider.activities.reduce((acc: number, a: { viewCount: number | null }) => acc + (a.viewCount ?? 0), 0),
+                valor: activities.reduce((acc, a) => acc + (a.viewCount ?? 0), 0),
                 label: 'Vistas totales',
               },
               {
-                valor: provider.activities.reduce((acc: number, a: { whatsappClickCount: number | null }) => acc + (a.whatsappClickCount ?? 0), 0),
+                valor: activities.reduce((acc, a) => acc + (a.whatsappClickCount ?? 0), 0),
                 label: 'Consultas WhatsApp',
               },
             ].map((stat, i) => (
@@ -149,14 +159,11 @@ export default async function DashboardPage() {
 
           {/* Lista de actividades */}
           <div>
-            <h2
-              className="text-lg font-bold mb-6"
-              style={{ color: '#EDEBE8' }}
-            >
+            <h2 className="text-lg font-bold mb-6" style={{ color: '#EDEBE8' }}>
               Mis actividades
             </h2>
 
-            {provider.activities.length === 0 ? (
+            {activities.length === 0 ? (
               <div
                 className="rounded-2xl p-12 text-center"
                 style={{
@@ -178,10 +185,10 @@ export default async function DashboardPage() {
               </div>
             ) : (
               <div
-                className="rounded-2xl overflow-hidden"
+                className="rounded-2xl"
                 style={{ border: '1px solid var(--color-surface-border)' }}
               >
-                {provider.activities.map((activity, index) => (
+                {activities.map((activity, index) => (
                   <div
                     key={activity.id}
                     className="flex items-center justify-between gap-6 px-6 py-5 transition-colors duration-200 hover:bg-white/2"
@@ -234,7 +241,7 @@ export default async function DashboardPage() {
             )}
           </div>
 
-          {/* CTA mobile nueva actividad */}
+          {/* CTA mobile */}
           <div className="md:hidden mt-8">
             <Link href="/dashboard/nueva-actividad">
               <button
