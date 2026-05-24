@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@theme {
+  /* ============================================
+     ANDÉN — Design Tokens
+     ============================================ */
+
+  /* Colores principales */
+  --color-turquoise: #00d9c0;
+  --color-turquoise-dark: #00b39f;
+  --color-turquoise-light: #33e5d1;
+
+  /* Grises oscuros (modo oscuro por defecto) */
+  --color-dark-900: #0d1b2a;
+  --color-dark-800: #1b263b;
+  --color-dark-700: #2d3e50;
+  --color-dark-600: #415a77;
+
+  /* Estados de actividades */
+  --color-status-operating: #10b981;
+  --color-status-limited: #f59e0b;
+  --color-status-closed: #ef4444;
+  --color-status-sold-out: #8b5cf6;
+
+  /* Tipografía */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Animaciones */
+  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-shimmer: shimmer 2s linear infinite;
+
+  /* Tokens modo claro — landing comercial */
+  --color-cream: #F5F0E8;
+  --color-cream-dark: #EDE7D9;
+  --color-ink: #1A1A1A;
+  --color-ink-light: #6B6560;
+  --color-sand: #C4956A;
+  --color-sand-light: #F0E4D4;
+  --color-turquoise-muted: #00A896;
+
+  /* Tokens dashboard — oscuro cálido */
+  --color-surface: #1A1A1A;
+  --color-surface-2: #222220;
+  --color-surface-3: #2A2A27;
+  --color-surface-border: rgba(255,255,255,0.07);
+  --color-surface-border-hover: rgba(255,255,255,0.12);
+}
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animaciones personalizadas */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 20px rgba(0, 217, 192, 0.3);
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 40px rgba(0, 217, 192, 0.6);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Base styles */
+body {
+  background: var(--color-dark-900);
+  color: #ededed;
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Utilitarios de accesibilidad */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

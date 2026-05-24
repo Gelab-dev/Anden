@@ -1,0 +1,457 @@
+// ============================================================
+// ANDÉN — Prisma Schema
+// ============================================================
+// Modelo de datos completo de la plataforma.
+// Los nombres van en inglés por convención, pero los comentarios
+// documentan el concepto en español.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+/// Roles de usuario en la plataforma
+enum UserRole {
+  TRAVELER          // Viajero (default)
+  PROVIDER_OWNER    // Dueño de perfil de prestador
+  ADMIN             // Equipo de Andén
+}
+
+/// Estado operativo actual de una actividad
+/// Este es el diferenciador de Andén: estado en tiempo real
+enum ActivityStatus {
+  OPERATING         // Operando normalmente
+  LIMITED           // Operando con cambios/restricciones
+  CLOSED            // Cerrado/suspendido hoy
+  SCHEDULED         // Programado para fecha futura
+  SOLD_OUT          // Sin cupos disponibles
+}
+
+/// Tipo de actividad publicable
+enum ActivityType {
+  EXCURSION         // Excursiones, avistajes, trekkings
+  CULTURAL_EVENT    // Recitales, teatro, ciclos de cine
+  EXHIBITION        // Exposiciones, muestras temporales
+  ATTRACTION        // Museos, parques, miradores (permanentes)
+  WORKSHOP          // Clases, talleres, experiencias
+  FESTIVAL          // Festivales, ferias, eventos multidía
+  GASTRONOMIC_EVENT // Cenas temáticas, festivales gastronómicos
+  NIGHTLIFE_EVENT   // Fiestas, eventos en bares con propuesta
+}
+
+/// Estado de verificación del prestador
+enum ProviderStatus {
+  PENDING           // Registrado, sin verificar
+  VERIFIED          // Verificado por Andén o ente público
+  SUSPENDED         // Suspendido temporalmente
+  REJECTED          // Rechazado en verificación
+}
+
+/// Tipo de aviso/alerta del prestador
+enum AlertSeverity {
+  INFO              // Información general
+  WARNING           // Atención (cambios menores)
+  CRITICAL          // Crítico (suspensión, peligro)
+}
+
+// ============================================================
+// AUTH MODELS (Better Auth)
+// ============================================================
+// Requeridos por Better Auth - no modificar sin consultar docs
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  name          String
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Andén-specific fields
+  role          UserRole @default(TRAVELER)
+  username      String?  @unique  /// handle público opcional
+  bio           String?  @db.Text
+
+  // Relaciones
+  sessions      Session[]
+  accounts      Account[]
+  providers     Provider[]   /// puede gestionar 1+ prestadores
+  reviews       Review[]
+  follows       Follow[]
+  passkeys      Passkey[]
+
+  @@index([email])
+  @@index([username])
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@map("sessions")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?   @db.Text
+  refreshToken          String?   @db.Text
+  idToken               String?   @db.Text
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([identifier, value])
+  @@index([identifier])
+  @@map("verifications")
+}
+
+/// Passkeys (WebAuthn) - login sin contraseña
+model Passkey {
+  id           String   @id @default(cuid())
+  name         String?
+  publicKey    String   @db.Text
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  credentialID String   @unique
+  counter      Int
+  deviceType   String
+  backedUp     Boolean
+  transports   String?
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
+  @@map("passkeys")
+}
+
+// ============================================================
+// CORE DOMAIN — Andén
+// ============================================================
+
+/// Destino turístico (ciudad o microregión)
+model Destination {
+  id          String   @id @default(cuid())
+  slug        String   @unique             /// "puerto-madryn", "la-plata"
+  name        String                       /// "Puerto Madryn"
+  province    String                       /// "Chubut"
+  country     String   @default("AR")
+
+  // Geo
+  latitude    Float
+  longitude   Float
+  boundingBox Json?                        /// GeoJSON para área del destino
+
+  // Contenido editorial
+  shortDescription String  @db.Text
+  longDescription  String? @db.Text
+  heroImageUrl     String?
+
+  // Estado de cobertura en Andén
+  isActive    Boolean  @default(false)     /// Si está oficialmente cubierto
+  isFeatured  Boolean  @default(false)     /// Destacar en mapa
+  launchDate  DateTime?                    /// Cuándo se lanzó
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  activities  Activity[]
+  providers   Provider[]
+  alerts      Alert[]
+
+  @@index([slug])
+  @@index([isActive])
+  @@map("destinations")
+}
+
+/// Categoría de actividad
+model Category {
+  id          String       @id @default(cuid())
+  slug        String       @unique             /// "avistaje-ballenas"
+  name        String                           /// "Avistaje de ballenas"
+  description String?      @db.Text
+  iconName    String?                          /// Nombre del icono Tabler
+  colorHex    String?                          /// Color de acento
+
+  // Tipo padre
+  activityType ActivityType
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  activities  ActivityCategory[]
+
+  @@index([slug])
+  @@index([activityType])
+  @@map("categories")
+}
+
+/// Prestador turístico (persona o empresa)
+model Provider {
+  id          String   @id @default(cuid())
+  slug        String   @unique             /// "avistaje-ballenas-jorge-schmid"
+  name        String                       /// Nombre comercial
+  legalName   String?                      /// Razón social
+  taxId       String?                      /// CUIT/CUIL
+
+  // Contacto
+  email       String
+  phone       String?
+  whatsapp    String?                      /// Para CTA de reserva
+  website     String?
+  instagram   String?
+
+  // Contenido
+  bio         String?  @db.Text
+  logoUrl     String?
+  coverUrl    String?
+
+  // Ubicación principal
+  destinationId String
+  destination Destination @relation(fields: [destinationId], references: [id])
+  address     String?
+  latitude    Float?
+  longitude   Float?
+
+  // Estado
+  status      ProviderStatus @default(PENDING)
+  isPremium   Boolean        @default(false)  /// Plan pago (futuro)
+
+  // Ownership
+  ownerId     String
+  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  verifiedAt  DateTime?
+
+  // Relaciones
+  activities  Activity[]
+  media       Media[]
+  alerts      Alert[]
+
+  @@index([slug])
+  @@index([destinationId])
+  @@index([ownerId])
+  @@index([status])
+  @@map("providers")
+}
+
+/// Actividad publicable (unidad core del feed)
+model Activity {
+  id            String         @id @default(cuid())
+  slug          String                       /// único dentro del destino
+  title         String
+  shortDescription String      @db.Text
+  longDescription  String?     @db.Text
+
+  // Clasificación
+  activityType  ActivityType
+  destinationId String
+  destination   Destination    @relation(fields: [destinationId], references: [id])
+  providerId    String?                       /// puede ser oficial/sin prestador
+  provider      Provider?      @relation(fields: [providerId], references: [id], onDelete: SetNull)
+  categories    ActivityCategory[]
+
+  // Estado en tiempo real — el diferenciador
+  status        ActivityStatus @default(OPERATING)
+  statusNote    String?        @db.Text       /// Detalle del estado actual
+  statusUpdatedAt DateTime     @default(now())
+
+  // Fechas (para eventos con fecha)
+  startDate     DateTime?
+  endDate       DateTime?
+  isRecurring   Boolean        @default(false)
+  recurrenceRule String?       @db.Text       /// RRULE (RFC 5545)
+
+  // Horarios (para atractivos con horario diario)
+  schedule      Json?                         /// { mon: "9-18", tue: "9-18", ... }
+
+  // Pricing
+  priceFrom     Decimal?       @db.Decimal(10, 2)
+  priceTo       Decimal?       @db.Decimal(10, 2)
+  priceCurrency String         @default("ARS")
+  isFree        Boolean        @default(false)
+
+  // Ubicación específica
+  meetingPoint  String?
+  latitude      Float?
+  longitude     Float?
+
+  // Capacidad
+  maxCapacity   Int?
+  currentBookings Int          @default(0)
+
+  // Metadatos
+  isPublished   Boolean        @default(false)
+  isFeatured    Boolean        @default(false)
+  viewCount     Int            @default(0)
+  whatsappClickCount Int       @default(0)
+
+  // Reserva
+  whatsappMessage String?      @db.Text       /// Mensaje pre-armado
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  publishedAt   DateTime?
+
+  // Relaciones
+  media         Media[]
+  reviews       Review[]
+  follows       Follow[]
+  alerts        Alert[]
+
+  @@unique([destinationId, slug])
+  @@index([destinationId, isPublished])
+  @@index([providerId])
+  @@index([status])
+  @@index([activityType])
+  @@index([startDate])
+  @@map("activities")
+}
+
+/// Tabla pivote Activity ↔ Category (M:N)
+model ActivityCategory {
+  activityId String
+  activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@id([activityId, categoryId])
+  @@index([categoryId])
+  @@map("activity_categories")
+}
+
+/// Archivos multimedia (fotos, videos)
+model Media {
+  id          String   @id @default(cuid())
+  url         String                          /// URL en Vercel Blob
+  type        String                          /// "image" | "video"
+  altText     String?
+  order       Int      @default(0)
+  width       Int?
+  height      Int?
+  sizeBytes   Int?
+
+  // Vinculaciones (uno solo se setea)
+  providerId  String?
+  provider    Provider? @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  activityId  String?
+  activity    Activity? @relation(fields: [activityId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+
+  @@index([providerId])
+  @@index([activityId])
+  @@map("media")
+}
+
+/// Reseña de viajero sobre actividad
+model Review {
+  id         String   @id @default(cuid())
+  rating     Int                              /// 1-5
+  comment    String   @db.Text
+
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activityId String
+  activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+
+  isVerified Boolean  @default(false)         /// V2: reservó por plataforma
+  isPublished Boolean @default(true)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, activityId])
+  @@index([activityId])
+  @@index([rating])
+  @@map("reviews")
+}
+
+/// Usuario sigue una actividad (recibe notificaciones)
+model Follow {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activityId String
+  activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+
+  notifyByEmail    Boolean @default(true)
+  notifyByWhatsapp Boolean @default(false)
+
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, activityId])
+  @@index([userId])
+  @@index([activityId])
+  @@map("follows")
+}
+
+/// Aviso/alerta emitido por prestador o Andén oficial
+model Alert {
+  id          String        @id @default(cuid())
+  title       String
+  message     String        @db.Text
+  severity    AlertSeverity @default(INFO)
+
+  // Origen (uno solo)
+  providerId  String?
+  provider    Provider?     @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  destinationId String?
+  destination Destination?  @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  activityId  String?
+  activity    Activity?     @relation(fields: [activityId], references: [id], onDelete: Cascade)
+
+  // Vigencia
+  expiresAt   DateTime?
+  isActive    Boolean       @default(true)
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([providerId])
+  @@index([destinationId])
+  @@index([activityId])
+  @@index([isActive, expiresAt])
+  @@map("alerts")
+}
