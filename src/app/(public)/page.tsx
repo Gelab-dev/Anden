@@ -2,6 +2,18 @@ import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { DestinoPill } from './destino-pill';
 
+type ActividadDestacada = {
+  id: string;
+  slug: string;
+  title: string;
+  shortDescription: string;
+  status: string;
+  priceFrom: unknown;
+  priceTo: unknown;
+  isFree: boolean;
+  destination: { slug: string; name: string };
+};
+
 function formatPrice(from: number | null, to: number | null, isFree: boolean) {
   if (isFree) return 'Gratis';
   if (!from) return 'Consultar';
@@ -108,7 +120,7 @@ export default async function Home() {
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {actividadesDestacadas.map((activity) => {
+              {actividadesDestacadas.map((activity: ActividadDestacada) => {
                 const statusConfig = STATUS_CONFIG[activity.status];
                 return (
                   <Link
