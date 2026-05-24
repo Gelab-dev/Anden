@@ -153,7 +153,7 @@ export default async function ActividadPage({ params }: PageProps) {
           {/* Categorías */}
           {actividad.categories.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-4">
-              {actividad.categories.map(({ category }) => (
+              {actividad.categories.map(({ category }: { category: { id: string; name: string } }) => (
                 <span
                   key={category.id}
                   className="text-xs px-2.5 py-1 rounded-full"
