@@ -118,11 +118,11 @@ export default async function DashboardPage() {
                 label: 'Publicadas',
               },
               {
-                valor: provider.activities.reduce((acc, a) => acc + (a.viewCount ?? 0), 0),
+                valor: provider.activities.reduce((acc: number, a) => acc + (a.viewCount ?? 0), 0),
                 label: 'Vistas totales',
               },
               {
-                valor: provider.activities.reduce((acc, a) => acc + (a.whatsappClickCount ?? 0), 0),
+                valor: provider.activities.reduce((acc: number, a) => acc + (a.whatsappClickCount ?? 0), 0),
                 label: 'Consultas WhatsApp',
               },
             ].map((stat, i) => (
