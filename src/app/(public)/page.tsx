@@ -77,7 +77,7 @@ export default async function Home() {
 
           {/* Destinos */}
           <div className="flex flex-wrap gap-3 justify-center">
-            {destinos.map((destino) => (
+            {destinos.map((destino: { id: string; slug: string; name: string; _count: { activities: number } }) => (
               <DestinoPill
                 key={destino.id}
                 slug={destino.slug}
