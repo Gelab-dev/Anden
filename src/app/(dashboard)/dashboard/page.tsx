@@ -114,7 +114,7 @@ export default async function DashboardPage() {
                 label: 'Actividades',
               },
               {
-                valor: provider.activities.filter(a => a.isPublished).length,
+                valor: provider.activities.filter((a: { isPublished: boolean }) => a.isPublished).length,
                 label: 'Publicadas',
               },
               {
