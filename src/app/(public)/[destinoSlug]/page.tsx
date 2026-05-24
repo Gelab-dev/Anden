@@ -69,7 +69,7 @@ export default async function DestinoPage({ params }: PageProps) {
           whatsapp: activity.provider.whatsapp,
         }
       : null,
-    categories: activity.categories.map(({ category }) => ({
+    categories: activity.categories.map(({ category }: { category: { id: string; name: string } }) => ({
       category: { id: category.id, name: category.name },
     })),
   }));
