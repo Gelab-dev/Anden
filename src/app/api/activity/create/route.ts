@@ -28,6 +28,7 @@ export async function POST(request: Request) {
       eventDate,
       eventEndDate,
       schedule,
+      mediaUrls
     } = await request.json();
 
     if (!title || !shortDescription) {
@@ -93,6 +94,18 @@ export async function POST(request: Request) {
         schedule: tipo === 'recurrente' && schedule ? { texto: schedule } : undefined,
       },
     });
+
+    // Guardar imágenes si se subieron
+    if (Array.isArray(mediaUrls) && mediaUrls.length > 0) {
+      await prisma.media.createMany({
+        data: mediaUrls.map((url: string, i: number) => ({
+          url,
+          type: 'image',
+          activityId: activity.id,
+          order: i,
+        })),
+      })
+    }
 
     return NextResponse.json({ activity }, { status: 201 });
   } catch (error) {

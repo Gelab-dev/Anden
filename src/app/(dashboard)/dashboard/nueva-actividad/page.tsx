@@ -1,9 +1,12 @@
 'use client';
 
+// src/app/(dashboard)/dashboard/nueva-actividad/page.tsx
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import type { Transition as MotionTransition } from 'framer-motion';
+import { ImageUploader } from '@/components/image-uploader';
 
 type ActivityType = 'eventual' | 'recurrente';
 
@@ -73,14 +76,13 @@ export default function NuevaActividadPage() {
     whatsappMessage: '',
     status: 'OPERATING',
     statusNote: '',
-    // Eventual
     eventDate: '',
     eventEndDate: '',
-    // Recurrente
     schedule: '',
+    mediaUrls: [] as string[],
   });
 
-  const set = (key: string, value: string | boolean) =>
+  const set = (key: string, value: string | boolean | string[]) =>
     setFormData((prev) => ({ ...prev, [key]: value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -141,16 +143,8 @@ export default function NuevaActividadPage() {
             <SectionTitle>Tipo de actividad</SectionTitle>
             <div className="grid grid-cols-2 gap-3">
               {([
-                {
-                  value: 'eventual',
-                  label: 'Eventual',
-                  desc: 'Tiene fecha de inicio y fin.',
-                },
-                {
-                  value: 'recurrente',
-                  label: 'Recurrente',
-                  desc: 'Se repite con horario fijo.',
-                },
+                { value: 'eventual',   label: 'Eventual',    desc: 'Tiene fecha de inicio y fin.' },
+                { value: 'recurrente', label: 'Recurrente',  desc: 'Se repite con horario fijo.' },
               ] as { value: ActivityType; label: string; desc: string }[]).map((t) => (
                 <button
                   key={t.value}
@@ -158,18 +152,11 @@ export default function NuevaActividadPage() {
                   onClick={() => setTipo(t.value)}
                   className="cursor-pointer text-left p-5 rounded-xl transition-all duration-200"
                   style={{
-                    background: tipo === t.value
-                      ? 'rgba(196,149,106,0.12)'
-                      : 'var(--color-surface-3)',
-                    border: `1px solid ${tipo === t.value
-                      ? 'var(--color-sand)'
-                      : 'var(--color-surface-border)'}`,
+                    background: tipo === t.value ? 'rgba(196,149,106,0.12)' : 'var(--color-surface-3)',
+                    border: `1px solid ${tipo === t.value ? 'var(--color-sand)' : 'var(--color-surface-border)'}`,
                   }}
                 >
-                  <p
-                    className="font-semibold text-sm mb-1"
-                    style={{ color: tipo === t.value ? 'var(--color-sand)' : '#EDEBE8' }}
-                  >
+                  <p className="font-semibold text-sm mb-1" style={{ color: tipo === t.value ? 'var(--color-sand)' : '#EDEBE8' }}>
                     {t.label}
                   </p>
                   <p className="text-xs leading-relaxed" style={{ color: 'rgba(237,235,232,0.4)' }}>
@@ -211,7 +198,7 @@ export default function NuevaActividadPage() {
                 onChange={(e) => set('shortDescription', e.target.value)}
                 rows={2}
                 maxLength={200}
-                placeholder="Una línea que resuma la actividad (máx 200 caracteres)"
+                placeholder="Máx. 200 caracteres. Esta descripción aparece en la card del feed."
                 required
                 className="px-4 py-3 rounded-xl text-base outline-none transition-all duration-200 resize-none"
                 style={inputStyle}
@@ -227,7 +214,7 @@ export default function NuevaActividadPage() {
                 value={formData.longDescription}
                 onChange={(e) => set('longDescription', e.target.value)}
                 rows={5}
-                placeholder="Detalle completo: duración, qué incluye, requisitos, punto de encuentro..."
+                placeholder="Describí la experiencia en detalle: qué incluye, qué llevar, condiciones especiales..."
                 className="px-4 py-3 rounded-xl text-base outline-none transition-all duration-200 resize-none"
                 style={inputStyle}
                 onFocus={inputFocusHandler}
@@ -236,14 +223,28 @@ export default function NuevaActividadPage() {
             </div>
           </section>
 
-          {/* Fechas — según tipo */}
+          {/* Imágenes */}
           <section
             className="space-y-6 pt-12"
             style={{ borderTop: '1px solid var(--color-surface-border)' }}
           >
-            <SectionTitle>
-              {tipo === 'eventual' ? 'Fechas del evento' : 'Horarios'}
-            </SectionTitle>
+            <SectionTitle>Imágenes</SectionTitle>
+            <ImageUploader
+              label="Fotos de la actividad"
+              hint="La primera imagen es la principal que aparece en el feed. Recomendamos fotos horizontales."
+              multiple
+              maxFiles={5}
+              value={formData.mediaUrls}
+              onChange={(urls) => set('mediaUrls', urls)}
+            />
+          </section>
+
+          {/* Fechas / Horarios */}
+          <section
+            className="space-y-6 pt-12"
+            style={{ borderTop: '1px solid var(--color-surface-border)' }}
+          >
+            <SectionTitle>{tipo === 'eventual' ? 'Fechas' : 'Horarios'}</SectionTitle>
 
             {tipo === 'eventual' ? (
               <div className="grid md:grid-cols-2 gap-6">
@@ -254,7 +255,7 @@ export default function NuevaActividadPage() {
                     type="datetime-local"
                     value={formData.eventDate}
                     onChange={(e) => set('eventDate', e.target.value)}
-                    required
+                    required={tipo === 'eventual'}
                     className="h-12 px-4 rounded-xl text-base outline-none transition-all duration-200"
                     style={{ ...inputStyle, colorScheme: 'dark' }}
                     onFocus={inputFocusHandler}
@@ -277,9 +278,7 @@ export default function NuevaActividadPage() {
               </div>
             ) : (
               <div className="flex flex-col gap-2">
-                <FieldLabel htmlFor="schedule" required>
-                  Esquema de horarios
-                </FieldLabel>
+                <FieldLabel htmlFor="schedule" required>Esquema de horarios</FieldLabel>
                 <input
                   id="schedule"
                   type="text"
@@ -308,11 +307,9 @@ export default function NuevaActividadPage() {
 
             <label className="flex items-center gap-3 cursor-pointer">
               <div
-                className="relative w-10 h-6 rounded-full transition-colors duration-200"
+                className="relative w-10 h-6 rounded-full transition-colors duration-200 cursor-pointer"
                 style={{
-                  background: formData.isFree
-                    ? 'var(--color-sand)'
-                    : 'var(--color-surface-3)',
+                  background: formData.isFree ? 'var(--color-sand)' : 'var(--color-surface-3)',
                   border: '1px solid var(--color-surface-border)',
                 }}
                 onClick={() => set('isFree', !formData.isFree)}

@@ -24,6 +24,7 @@ export async function PATCH(request: Request) {
       eventDate,
       eventEndDate,
       schedule,
+      mediaUrls
     } = await request.json();
 
     if (!activityId || !title || !shortDescription) {
@@ -65,6 +66,17 @@ export async function PATCH(request: Request) {
         schedule: schedule ? { texto: schedule } : undefined,
       },
     });
+
+    if (mediaUrls !== undefined) {
+      await prisma.media.deleteMany({ where: { activityId } })
+      if (mediaUrls.length) {
+        await prisma.media.createMany({
+          data: mediaUrls.map((url: string, i: number) => ({
+            url, type: 'image', activityId, order: i,
+          })),
+        })
+      }
+    }
 
     return NextResponse.json({ activity: updated });
   } catch (error) {

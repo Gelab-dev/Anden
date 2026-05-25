@@ -19,6 +19,9 @@ export async function GET(
         id: actividadId,
         provider: { ownerId: session.user.id },
       },
+      include: {
+        media: { orderBy: { order: 'asc' } },
+      },
     });
 
     if (!activity) {

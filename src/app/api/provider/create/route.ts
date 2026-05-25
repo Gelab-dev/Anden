@@ -13,7 +13,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { whatsapp, bio, destinationSlug } = await request.json();
+    const { whatsapp, bio, destinationSlug, logoUrl, coverUrl } = await request.json();
 
     // Validación
     if (!whatsapp || !destinationSlug) {
@@ -68,6 +68,8 @@ export async function POST(request: Request) {
           bio: bio || null,
           destinationId: destination.id,
           ownerId: session.user.id,
+          logoUrl: logoUrl ?? undefined,
+          coverUrl: coverUrl ?? undefined,
           status: 'PENDING',
         },
       }),

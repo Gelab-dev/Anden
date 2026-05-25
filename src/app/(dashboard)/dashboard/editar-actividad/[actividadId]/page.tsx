@@ -1,10 +1,13 @@
 'use client';
 
+// src/app/(dashboard)/dashboard/editar-actividad/[actividadId]/page.tsx
+
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import type { Transition as MotionTransition } from 'framer-motion';
 import Link from 'next/link';
+import { ImageUploader } from '@/components/image-uploader';
 
 interface PageProps {
   params: Promise<{ actividadId: string }>;
@@ -62,9 +65,10 @@ export default function EditarActividadPage({ params }: PageProps) {
     eventEndDate: '',
     schedule: '',
     isRecurring: false,
+    mediaUrls: [] as string[],    // URLs de imágenes — se pre-cargan desde la API
   });
 
-  // Cargar datos de la actividad
+  // Cargar datos de la actividad (incluyendo media)
   useEffect(() => {
     async function fetchActivity() {
       try {
@@ -95,6 +99,10 @@ export default function EditarActividadPage({ params }: PageProps) {
             : '',
           schedule: scheduleData?.texto || '',
           isRecurring: a.isRecurring || false,
+          // Pre-cargar imágenes existentes ordenadas por campo order
+          mediaUrls: (a.media ?? [])
+            .sort((x: { order: number }, y: { order: number }) => x.order - y.order)
+            .map((m: { url: string }) => m.url),
         });
       } catch {
         setError('Error al cargar la actividad');
@@ -106,7 +114,7 @@ export default function EditarActividadPage({ params }: PageProps) {
     fetchActivity();
   }, [actividadId]);
 
-  const set = (key: string, value: string | boolean) =>
+  const set = (key: string, value: string | boolean | string[]) =>
     setFormData((prev) => ({ ...prev, [key]: value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -198,10 +206,7 @@ export default function EditarActividadPage({ params }: PageProps) {
 
           {/* Información básica */}
           <section className="space-y-6">
-            <p
-              className="text-xs font-mono tracking-[0.2em] uppercase"
-              style={{ color: 'var(--color-sand)' }}
-            >
+            <p className="text-xs font-mono tracking-[0.2em] uppercase" style={{ color: 'var(--color-sand)' }}>
               Información básica
             </p>
 
@@ -251,15 +256,30 @@ export default function EditarActividadPage({ params }: PageProps) {
             </div>
           </section>
 
+          {/* Imágenes */}
+          <section
+            className="space-y-6 pt-10"
+            style={{ borderTop: '1px solid var(--color-surface-border)' }}
+          >
+            <p className="text-xs font-mono tracking-[0.2em] uppercase" style={{ color: 'var(--color-sand)' }}>
+              Imágenes
+            </p>
+            <ImageUploader
+              label="Fotos de la actividad"
+              hint="La primera imagen es la principal que aparece en el feed. Recomendamos fotos horizontales."
+              multiple
+              maxFiles={5}
+              value={formData.mediaUrls}
+              onChange={(urls) => set('mediaUrls', urls)}
+            />
+          </section>
+
           {/* Fechas / Horarios */}
           <section
             className="space-y-6 pt-10"
             style={{ borderTop: '1px solid var(--color-surface-border)' }}
           >
-            <p
-              className="text-xs font-mono tracking-[0.2em] uppercase"
-              style={{ color: 'var(--color-sand)' }}
-            >
+            <p className="text-xs font-mono tracking-[0.2em] uppercase" style={{ color: 'var(--color-sand)' }}>
               {formData.isRecurring ? 'Horarios' : 'Fechas'}
             </p>
 
@@ -315,16 +335,13 @@ export default function EditarActividadPage({ params }: PageProps) {
             className="space-y-6 pt-10"
             style={{ borderTop: '1px solid var(--color-surface-border)' }}
           >
-            <p
-              className="text-xs font-mono tracking-[0.2em] uppercase"
-              style={{ color: 'var(--color-sand)' }}
-            >
+            <p className="text-xs font-mono tracking-[0.2em] uppercase" style={{ color: 'var(--color-sand)' }}>
               Precio
             </p>
 
             <label className="flex items-center gap-3 cursor-pointer">
               <div
-                className="relative w-10 h-6 rounded-full transition-colors duration-200"
+                className="relative w-10 h-6 rounded-full transition-colors duration-200 cursor-pointer"
                 style={{
                   background: formData.isFree ? 'var(--color-sand)' : 'var(--color-surface-3)',
                   border: '1px solid var(--color-surface-border)',
@@ -381,10 +398,7 @@ export default function EditarActividadPage({ params }: PageProps) {
             className="space-y-6 pt-10"
             style={{ borderTop: '1px solid var(--color-surface-border)' }}
           >
-            <p
-              className="text-xs font-mono tracking-[0.2em] uppercase"
-              style={{ color: 'var(--color-sand)' }}
-            >
+            <p className="text-xs font-mono tracking-[0.2em] uppercase" style={{ color: 'var(--color-sand)' }}>
               Capacidad y contacto
             </p>
 

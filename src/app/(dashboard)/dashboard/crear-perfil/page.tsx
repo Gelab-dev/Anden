@@ -1,10 +1,13 @@
 'use client';
 
+// src/app/(dashboard)/dashboard/crear-perfil/page.tsx
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import type { Transition as MotionTransition } from 'framer-motion';
+import { ImageUploader } from '@/components/image-uploader';
 
 const DESTINOS = [
   { slug: 'puerto-madryn', label: 'Puerto Madryn' },
@@ -21,6 +24,8 @@ export default function CrearPerfilPage() {
     whatsapp: '',
     bio: '',
     destinationSlug: 'puerto-madryn',
+    logoUrls: [] as string[],     // máx 1 — logo del negocio
+    coverUrls: [] as string[],    // máx 1 — imagen de portada
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,7 +37,13 @@ export default function CrearPerfilPage() {
       const response = await fetch('/api/provider/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          whatsapp: formData.whatsapp,
+          bio: formData.bio,
+          destinationSlug: formData.destinationSlug,
+          logoUrl: formData.logoUrls[0] ?? null,
+          coverUrl: formData.coverUrls[0] ?? null,
+        }),
       });
 
       const data = await response.json();
@@ -80,7 +91,7 @@ export default function CrearPerfilPage() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-8">
 
-          {/* Nombre del negocio — solo lectura, viene de la cuenta */}
+          {/* Nombre del negocio — solo lectura */}
           <div className="flex flex-col gap-2">
             <label
               className="text-sm font-semibold"
@@ -102,6 +113,24 @@ export default function CrearPerfilPage() {
               Este es el nombre con el que te registraste.
             </p>
           </div>
+
+          {/* Logo */}
+          <ImageUploader
+            label="Logo del negocio"
+            hint="Aparece en tu perfil público. Recomendamos imagen cuadrada."
+            multiple={false}
+            value={formData.logoUrls}
+            onChange={(urls) => setFormData({ ...formData, logoUrls: urls })}
+          />
+
+          {/* Imagen de portada */}
+          <ImageUploader
+            label="Imagen de portada"
+            hint="Imagen panorámica que encabeza tu perfil. Recomendamos 1200×400px."
+            multiple={false}
+            value={formData.coverUrls}
+            onChange={(urls) => setFormData({ ...formData, coverUrls: urls })}
+          />
 
           {/* WhatsApp */}
           <div className="flex flex-col gap-2">
@@ -125,12 +154,8 @@ export default function CrearPerfilPage() {
                 border: '1px solid var(--color-surface-border)',
                 color: '#EDEBE8',
               }}
-              onFocus={(e) => {
-                e.target.style.borderColor = 'var(--color-sand)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = 'var(--color-surface-border)';
-              }}
+              onFocus={(e) => { e.target.style.borderColor = 'var(--color-sand)'; }}
+              onBlur={(e) => { e.target.style.borderColor = 'var(--color-surface-border)'; }}
             />
             <p className="text-xs" style={{ color: 'rgba(237,235,232,0.3)' }}>
               Formato internacional recomendado. Los viajeros te contactan directo acá.
@@ -159,12 +184,8 @@ export default function CrearPerfilPage() {
                 border: '1px solid var(--color-surface-border)',
                 color: '#EDEBE8',
               }}
-              onFocus={(e) => {
-                e.target.style.borderColor = 'var(--color-sand)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = 'var(--color-surface-border)';
-              }}
+              onFocus={(e) => { e.target.style.borderColor = 'var(--color-sand)'; }}
+              onBlur={(e) => { e.target.style.borderColor = 'var(--color-surface-border)'; }}
             />
           </div>
 

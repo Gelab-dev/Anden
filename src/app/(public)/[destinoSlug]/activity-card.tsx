@@ -43,7 +43,7 @@ const STATUS_CONFIG: Record<
 > = {
   OPERATING: {
     label: 'Operando',
-    badge: 'bg-emerald-500/18 border-emerald-500/40 text-emerald-400',
+    badge: 'bg-black/50 border-emerald-500/40 text-emerald-400',
     dot: 'bg-emerald-400',
   },
   LIMITED: {
@@ -174,12 +174,19 @@ export function ActivityCard({ activity, destinoSlug }: Props) {
           className="absolute inset-0 bg-linear-to-b from-transparent from-30% to-[#1C1C1A]/90"
         />
 
+        {/* Fade superior — NUEVO, protege los badges */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-linear-to-t from-transparent from-60% to-black/50"
+        />
+
         {/* Badge de estado — esquina superior izquierda */}
         <div
           className={[
             'absolute top-2.5 left-2.5',
             'flex items-center gap-1.5 px-2.5 py-1',
             'rounded-full border text-[11px] font-medium',
+            'bg-black/50 shadow-sm',
             'backdrop-blur-sm',
             statusCfg.badge,
           ].join(' ')}
@@ -189,7 +196,7 @@ export function ActivityCard({ activity, destinoSlug }: Props) {
         </div>
 
         {/* Badge de tipo — esquina superior derecha */}
-        <div className="absolute top-2.5 right-2.5 px-2 py-1 rounded-full text-[10px] font-medium uppercase tracking-[0.06em] text-white/50 bg-black/30 border border-white/12 backdrop-blur-sm">
+        <div className="absolute top-2.5 right-2.5 px-2 py-1 rounded-full text-[10px] font-medium uppercase tracking-[0.06em] text-white/50 bg-black/50 border border-white/12 backdrop-blur-sm shadow-sm">
           {recurrenceLabel}
         </div>
       </Link>
