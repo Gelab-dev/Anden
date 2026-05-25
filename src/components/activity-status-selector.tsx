@@ -241,7 +241,7 @@ export function ActivityStatusSelector({
       {/* Trigger */}
       <button
         onClick={() => setOpen(true)}
-        className="cursor-pointer flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 hover:opacity-80"
+        className="cursor-pointer flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 hover:opacity-80"
         style={{
           color: currentEstado.color,
           background: currentEstado.bg,

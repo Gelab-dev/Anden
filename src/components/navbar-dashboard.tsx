@@ -9,7 +9,6 @@ import type { Transition as MotionTransition } from 'framer-motion';
 
 const LINKS = [
   { label: 'Panel', href: '/dashboard' },
-  { label: 'Nueva actividad', href: '/dashboard/nueva-actividad' },
 ];
 
 export function NavbarDashboard({ userName }: { userName?: string | null }) {
