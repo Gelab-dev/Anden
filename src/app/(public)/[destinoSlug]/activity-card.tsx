@@ -43,27 +43,27 @@ const STATUS_CONFIG: Record<
 > = {
   OPERATING: {
     label: 'Operando',
-    badge: 'bg-emerald-500/[.18] border-emerald-500/40 text-emerald-400',
+    badge: 'bg-emerald-500/18 border-emerald-500/40 text-emerald-400',
     dot: 'bg-emerald-400',
   },
   LIMITED: {
     label: 'Cupo limitado',
-    badge: 'bg-amber-500/[.18] border-amber-500/40 text-amber-400',
+    badge: 'bg-amber-500/18 border-amber-500/40 text-amber-400',
     dot: 'bg-amber-400',
   },
   CLOSED: {
     label: 'Cerrado',
-    badge: 'bg-red-500/[.18] border-red-500/40 text-red-400',
+    badge: 'bg-red-500/18 border-red-500/40 text-red-400',
     dot: 'bg-red-400',
   },
   SOLD_OUT: {
     label: 'Sin cupos',
-    badge: 'bg-red-500/[.18] border-red-500/40 text-red-400',
+    badge: 'bg-red-500/18 border-red-500/40 text-red-400',
     dot: 'bg-red-400',
   },
   SCHEDULED: {
     label: 'Próximamente',
-    badge: 'bg-blue-500/[.18] border-blue-500/40 text-blue-400',
+    badge: 'bg-blue-500/18 border-blue-500/40 text-blue-400',
     dot: 'bg-blue-400',
   },
 }
@@ -144,7 +144,7 @@ export function ActivityCard({ activity, destinoSlug }: Props) {
         'group rounded-2xl overflow-hidden flex flex-col',
         'bg-[#1C1C1A] border border-white/8',
         'transition-all duration-200 ease-out',
-        'hover:-translate-y-1 hover:border-white/[.14]',
+        'hover:-translate-y-1 hover:border-white/14',
         isClosed ? 'opacity-60' : '',
       ]
         .filter(Boolean)
@@ -216,7 +216,7 @@ export function ActivityCard({ activity, destinoSlug }: Props) {
         </p>
 
         {/* Footer: fecha + CTA */}
-        <div className="border-t border-white/6 mt-auto pt-3 flex items-center justify-between gap-2">
+        <div className="border-t border-white/6 pt-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-2 mt-auto">
           {/* Fecha / frecuencia */}
           <span className="text-[11px] text-white/30 shrink-0">
             {dateStr ?? (activity.isRecurring ? 'Recurrente' : null)}
@@ -231,7 +231,7 @@ export function ActivityCard({ activity, destinoSlug }: Props) {
               className={[
                 'text-xs font-medium shrink-0 cursor-pointer',
                 'px-3 py-1.5 rounded-full',
-                'text-[#00D9C0] border border-[#00D9C0]/30 bg-[#00D9C0]/[.07]',
+                'text-[#00D9C0] border border-[#00D9C0]/30 bg-[#00D9C0]/7',
                 'transition-all duration-180 ease-out',
                 'hover:bg-[#00D9C0] hover:text-[#0D1B2A] hover:border-[#00D9C0] hover:scale-[1.04]',
               ].join(' ')}

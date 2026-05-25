@@ -1,203 +1,277 @@
-import Link from 'next/link';
-import { prisma } from '@/lib/prisma';
-import { DestinoPill } from './destino-pill';
+// src/app/(public)/page.tsx
+// Server Component
 
-type ActividadDestacada = {
-  id: string;
-  slug: string;
-  title: string;
-  shortDescription: string;
-  status: string;
-  priceFrom: unknown;
-  priceTo: unknown;
-  isFree: boolean;
-  destination: { slug: string; name: string };
-};
+import { headers } from 'next/headers'
+import Link from 'next/link'
+import { prisma } from '@/lib/prisma'
+import { HeroSection } from './hero-section'
+import { DestinationCard } from './destination-card'
+import { ActivityCard, type ActivityCardData } from './[destinoSlug]/activity-card'
 
-function formatPrice(from: number | null, to: number | null, isFree: boolean) {
-  if (isFree) return 'Gratis';
-  if (!from) return 'Consultar';
-  const toNum = to ? Number(to) : null;
-  if (!toNum || Number(from) === toNum) return `$${Number(from).toLocaleString()}`;
-  return `Desde $${Number(from).toLocaleString()}`;
+// ─── Detección de destino por IP (headers de Vercel) ─────────────────────────
+
+async function detectNearestDestination(
+  activeDestinations: { slug: string; name: string }[]
+) {
+  const headersList = await headers()
+
+  // Vercel inyecta estos headers automáticamente en producción
+  const city = headersList.get('x-vercel-ip-city')?.toLowerCase() ?? ''
+  const region = headersList.get('x-vercel-ip-country-region')?.toLowerCase() ?? ''
+
+  // Intentar match por ciudad o región
+  const matched = activeDestinations.find((d) => {
+    const slug = d.slug.toLowerCase()
+    const dName = d.name.toLowerCase()
+    return (
+      city.includes(dName) ||
+      dName.includes(city) ||
+      slug.includes(city.replace(/\s+/g, '-')) ||
+      region.includes(dName)
+    )
+  })
+
+  // Si no hay match → el destino más activo (primero en la lista)
+  return matched ?? activeDestinations[0] ?? null
 }
 
-const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string; border: string }> = {
-  OPERATING: { label: 'Operando',         color: '#10B981', bg: 'rgba(16,185,129,0.1)',  border: 'rgba(16,185,129,0.2)'  },
-  LIMITED:   { label: 'Cupo limitado',    color: '#F59E0B', bg: 'rgba(245,158,11,0.1)',  border: 'rgba(245,158,11,0.2)'  },
-  CLOSED:    { label: 'Cerrado',          color: '#EF4444', bg: 'rgba(239,68,68,0.1)',   border: 'rgba(239,68,68,0.2)'   },
-  SOLD_OUT:  { label: 'Sin cupos',        color: '#8B5CF6', bg: 'rgba(139,92,246,0.1)',  border: 'rgba(139,92,246,0.2)'  },
-};
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default async function Home() {
-  const destinos = await prisma.destination.findMany({
+export const metadata = {
+  title: 'Andén — La vida real de cada destino argentino',
+  description:
+    'Actividades, eventos y experiencias actualizados en tiempo real por quienes los organizan.',
+}
+
+export default async function HomePage() {
+  // 1. Destinos activos con conteo de actividades
+  const rawDestinations = await prisma.destination.findMany({
     where: { isActive: true },
     include: {
-      _count: {
-        select: { activities: { where: { isPublished: true } } },
+      activities: {
+        where: {
+          isPublished: true,
+          provider: { status: 'VERIFIED' },
+        },
+        select: { id: true, status: true },
       },
     },
-    orderBy: { isFeatured: 'desc' },
-  });
+    orderBy: { name: 'asc' },
+  })
 
-  const actividadesDestacadas = await prisma.activity.findMany({
+  const destinations = rawDestinations.map((d) => ({
+    slug: d.slug,
+    name: d.name,
+    province: d.province,
+    heroImageUrl: d.heroImageUrl,
+    operatingCount: d.activities.filter((a) => a.status === 'OPERATING').length,
+    totalCount: d.activities.length,
+  }))
+
+  // 2. Detectar destino más cercano por IP
+  const nearest = await detectNearestDestination(destinations)
+
+  // 3. Actividades destacadas para el feed del home
+  const rawFeatured = await prisma.activity.findMany({
     where: {
       isPublished: true,
       isFeatured: true,
       provider: { status: 'VERIFIED' },
     },
     include: {
-      destination: true,
-      provider: true,
-      categories: { include: { category: true }, take: 1 },
+      provider: { select: { name: true, whatsapp: true } },
+      media: { orderBy: { order: 'asc' }, take: 1 },
+      destination: { select: { name: true, slug: true } },
     },
-    take: 6,
-    orderBy: { createdAt: 'desc' },
-  });
+    orderBy: [{ status: 'asc' }, { statusUpdatedAt: 'desc' }],
+    take: 4,
+  })
+
+  const featuredActivities: (ActivityCardData & { destinationSlug: string; destinationName: string })[] =
+    rawFeatured.map((a) => ({
+      id: a.id,
+      slug: a.slug,
+      title: a.title,
+      shortDescription: a.shortDescription,
+      status: a.status,
+      statusNote: a.statusNote,
+      activityType: a.activityType,
+      isRecurring: a.isRecurring,
+      startDate: a.startDate ?? null,
+      endDate: a.endDate ?? null,
+      whatsappMessage: a.whatsappMessage,
+      provider: a.provider
+        ? { name: a.provider.name, whatsapp: a.provider.whatsapp }
+        : null,
+      media: a.media.map((m) => ({ url: m.url, altText: m.altText, order: m.order })),
+      destinationSlug: a.destination.slug,
+      destinationName: a.destination.name,
+    }))
 
   return (
     <div className="min-h-screen bg-dark-900">
 
-      {/* Hero */}
-      <section className="relative px-6 md:px-12 pt-24 pb-20 overflow-hidden">
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'radial-gradient(ellipse 60% 50% at 50% 0%, rgba(0,217,192,0.06) 0%, transparent 70%)',
-          }}
+      {/* ── Hero ── */}
+      {nearest ? (
+        <HeroSection
+          destinationName={nearest.name}
+          destinationSlug={nearest.slug}
+          province={destinations.find((d) => d.slug === nearest.slug)?.province ?? ''}
+          heroImageUrl={destinations.find((d) => d.slug === nearest.slug)?.heroImageUrl ?? null}
+          operatingCount={destinations.find((d) => d.slug === nearest.slug)?.operatingCount ?? 0}
+          totalCount={destinations.find((d) => d.slug === nearest.slug)?.totalCount ?? 0}
         />
-        <div className="max-w-7xl mx-auto text-center relative z-10">
-          <p className="text-xs font-mono tracking-[0.2em] uppercase text-turquoise mb-6">
-            La cartelera viva de cada destino
+      ) : (
+        // Fallback: sin destinos activos todavía
+        <div className="px-6 md:px-12 pt-24 pb-16 text-center">
+          <p className="text-[11px] tracking-widest uppercase text-white/30 mb-4">
+            Andén
           </p>
           <h1
-            className="font-black tracking-[-0.03em] text-white mb-6"
-            style={{
-              fontFamily: 'var(--font-playfair)',
-              fontSize: 'clamp(3rem, 6vw, 5rem)',
-              lineHeight: 1.0,
-            }}
+            className="text-4xl md:text-6xl font-black text-cream tracking-[-0.03em] leading-tight mb-4"
+            style={{ fontFamily: 'var(--font-playfair)' }}
           >
-            Descubrí qué hacer
-            <br />
-            <span style={{ color: '#00D9C0' }}>hoy en tu destino.</span>
+            La vida real de cada<br />
+            <em className="italic text-[#00D9C0]">destino argentino.</em>
           </h1>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-12">
-            Actividades, eventos y experiencias actualizadas en tiempo real
-            por quienes las organizan.
+          <p className="text-white/40 max-w-md mx-auto">
+            Estamos incorporando los primeros destinos. Pronto vas a poder descubrir
+            qué pasa hoy en tu ciudad.
           </p>
-
-          {/* Destinos */}
-          <div className="flex flex-wrap gap-3 justify-center">
-            {destinos.map((destino: { id: string; slug: string; name: string; _count: { activities: number } }) => (
-              <DestinoPill
-                key={destino.id}
-                slug={destino.slug}
-                name={destino.name}
-                count={destino._count.activities}
-              />
-            ))}
-          </div>
         </div>
-      </section>
+      )}
 
-      {/* Actividades destacadas */}
-      {actividadesDestacadas.length > 0 && (
-        <section className="px-6 md:px-12 py-20" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-          <div className="max-w-7xl mx-auto">
-            <div className="flex items-end justify-between mb-10">
-              <div>
-                <p className="text-xs font-mono tracking-[0.2em] uppercase text-gray-500 mb-3">
-                  Destacadas
-                </p>
-                <h2
-                  className="text-3xl md:text-4xl font-black tracking-[-0.03em] text-white"
-                  style={{ fontFamily: 'var(--font-playfair)' }}
-                >
-                  Lo mejor de cada destino
-                </h2>
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {actividadesDestacadas.map((activity: ActividadDestacada) => {
-                const statusConfig = STATUS_CONFIG[activity.status];
-                return (
-                  <Link
-                    key={activity.id}
-                    href={`/${activity.destination.slug}`}
-                    className="group block rounded-2xl p-6 transition-all duration-300 cursor-pointer"
-                    style={{
-                      background: 'rgba(255,255,255,0.03)',
-                      border: '1px solid rgba(255,255,255,0.06)',
-                    }}
-                  >
-                    {statusConfig && (
-                      <span
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium mb-4"
-                        style={{
-                          color: statusConfig.color,
-                          background: statusConfig.bg,
-                          border: `1px solid ${statusConfig.border}`,
-                        }}
-                      >
-                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusConfig.color }} />
-                        {statusConfig.label}
-                      </span>
-                    )}
-
-                    <h3 className="font-bold text-white mb-2 group-hover:text-turquoise transition-colors duration-200">
-                      {activity.title}
-                    </h3>
-                    <p className="text-sm text-gray-500 leading-relaxed mb-4">
-                      {activity.shortDescription}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-600">{activity.destination.name}</span>
-                      <span className="text-sm font-semibold text-turquoise">
-                        {formatPrice(
-                          activity.priceFrom ? Number(activity.priceFrom) : null,
-                          activity.priceTo ? Number(activity.priceTo) : null,
-                          activity.isFree
-                        )}
-                      </span>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
+      {/* ── Destinos ── */}
+      {destinations.length > 0 && (
+        <section className="px-6 md:px-12 py-12 border-t border-white/5">
+          <p className="text-[10px] tracking-[0.12em] uppercase text-white/25 mb-1.5">
+            Destinos disponibles
+          </p>
+          <h2
+            className="text-2xl font-bold text-cream tracking-[-0.02em] mb-6"
+            style={{ fontFamily: 'var(--font-playfair)' }}
+          >
+            ¿A dónde vas?
+          </h2>
+          <div
+            className="grid gap-3"
+            style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))' }}
+          >
+            {destinations.map((d) => (
+              <DestinationCard key={d.slug} {...d} />
+            ))}
           </div>
         </section>
       )}
 
-      {/* CTA prestador */}
-      <section
-        className="px-6 md:px-12 py-20"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
-      >
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-xs font-mono tracking-[0.2em] uppercase text-gray-500 mb-4">
-            Para negocios
+      {/* ── Actividades destacadas ── */}
+      {featuredActivities.length > 0 && (
+        <section className="px-6 md:px-12 py-12 border-t border-white/5">
+          <p className="text-[10px] tracking-[0.12em] uppercase text-white/25 mb-1.5">
+            Destacadas
           </p>
           <h2
-            className="text-3xl md:text-4xl font-black tracking-[-0.03em] text-white mb-4"
+            className="text-2xl font-bold text-cream tracking-[-0.02em] mb-6"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
-            ¿Organizás actividades?
+            Lo mejor de ahora
           </h2>
-          <p className="text-gray-400 mb-8 leading-relaxed">
-            Publicá en Andén y aparecé cuando alguien busca qué hacer hoy en tu ciudad.
-          </p>
-          <Link href="/comercial">
-            <button
-              className="cursor-pointer px-8 py-4 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:opacity-90 hover:scale-[1.02]"
-              style={{ background: '#00D9C0', color: '#0D1B2A' }}
+          <div
+            className="grid gap-4"
+            style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}
+          >
+            {featuredActivities.map((activity) => (
+              <ActivityCard
+                key={activity.id}
+                activity={activity}
+                destinoSlug={activity.destinationSlug}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── Lead capture ── */}
+      <section className="px-6 md:px-12 py-12 border-t border-white/5">
+        <div className="rounded-2xl bg-white/3 border border-white/7 p-8 flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
+          <div className="flex-1">
+            <p className="text-[10px] tracking-widest uppercase text-white/25 mb-2">
+              / El tren todavía no llegó
+            </p>
+            <h3
+              className="text-2xl font-bold text-cream tracking-[-0.02em] mb-2"
+              style={{ fontFamily: 'var(--font-playfair)' }}
             >
-              Conocé Andén para negocios
-            </button>
-          </Link>
+              ¿Tu ciudad no está en Andén?
+            </h3>
+            <p className="text-sm text-white/40 leading-relaxed">
+              Avisanos dónde estás y nos aseguramos de que sea el próximo destino.
+            </p>
+          </div>
+
+          <LeadCaptureForm />
         </div>
       </section>
+
+      {/* ── Para prestadores ── */}
+      <section className="px-6 md:px-12 py-12 border-t border-white/5 text-center">
+        <p className="text-[10px] tracking-widest uppercase text-white/25 mb-3">
+          Para negocios
+        </p>
+        <h2
+          className="text-2xl font-bold text-cream tracking-[-0.02em] mb-3"
+          style={{ fontFamily: 'var(--font-playfair)' }}
+        >
+          ¿Organizás actividades?
+        </h2>
+        <p className="text-sm text-white/40 mb-6 max-w-md mx-auto">
+          Publicá en Andén y aparecé cuando alguien busca qué hacer hoy en tu ciudad.
+        </p>
+        <Link
+          href="/comercial"
+          className="inline-flex items-center gap-2 bg-sand text-white text-sm font-medium px-6 py-2.5 rounded-full hover:bg-[#B8845A] transition-colors duration-150 cursor-pointer"
+        >
+          Conocé Andén para negocios →
+        </Link>
+      </section>
+
     </div>
-  );
+  )
+}
+
+// ─── Lead capture form — necesita 'use client' propio ────────────────────────
+// Por ahora es un componente inline. Moverlo a lead-capture-form.tsx cuando
+// se conecte a una API route real.
+
+function LeadCaptureForm() {
+  // Nota: este form envía a una API route que hay que crear en /api/leads
+  // Por ahora el action es un placeholder
+  return (
+    <form
+      action="/api/leads"
+      method="POST"
+      className="flex gap-2 shrink-0"
+    >
+      <input
+        type="email"
+        name="email"
+        placeholder="tu@email.com"
+        required
+        className="bg-white/5 border border-white/12 rounded-full px-4 py-2 text-sm text-white/60 placeholder:text-white/25 w-48 focus:outline-none focus:border-white/25"
+      />
+      <input
+        type="text"
+        name="city"
+        placeholder="Tu ciudad"
+        required
+        className="bg-white/5 border border-white/12 rounded-full px-4 py-2 text-sm text-white/60 placeholder:text-white/25 w-36 focus:outline-none focus:border-white/25"
+      />
+      <button
+        type="submit"
+        className="bg-[#00D9C0] text-dark-900 text-sm font-semibold px-5 py-2 rounded-full hover:bg-[#00c4ad] transition-colors duration-150 cursor-pointer shrink-0"
+      >
+        Avisame →
+      </button>
+    </form>
+  )
 }
