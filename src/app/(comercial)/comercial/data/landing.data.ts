@@ -4,7 +4,7 @@
       'Andén es la cartelera cultural y turística de tu ciudad. Publicá tus actividades y aparecé en el momento justo.',
     ctaPrimary: 'Empezar gratis',
     ctaSecondary: 'Ver cómo funciona',
-    socialProof: 'Descubrí en tu ciudad',
+    socialProof: 'Ofrecé experiencias en Andén',
   };
   
   export const problemaData = {

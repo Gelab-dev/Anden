@@ -71,7 +71,7 @@ export function NavbarComercial() {
           <div className="hidden md:block">
             <Link href="/login?modo=registro">
               <button
-                className="cursor-pointer px-5 py-2.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:opacity-90 hover:scale-[1.02]"
+                className="cursor-pointer px-5 py-2.5 rounded-lg text-sm font-semibold tracking-wide transition-all duration-300 hover:opacity-90 hover:scale-[1.02]"
                 style={{
                   background: 'var(--color-sand)',
                   color: 'var(--color-cream)',
@@ -152,7 +152,7 @@ export function NavbarComercial() {
             >
               <Link href="/login?modo=registro" onClick={() => setMenuOpen(false)}>
                 <button
-                  className="w-full py-4 rounded-full text-base font-semibold tracking-wide"
+                  className="w-full py-4 rounded-lg text-base font-semibold tracking-wide"
                   style={{
                     background: 'var(--color-sand)',
                     color: 'var(--color-cream)',

@@ -2,15 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Transition as MotionTransition } from 'framer-motion';
 import { heroData } from '../data/landing.data';
-
-const MapaArgentina3D = dynamic(() => import('../mapa-3d'), {
-  ssr: false,
-  loading: () => <div className="h-full w-full" />,
-});
+import { MockupFeed } from './mockup-feed';
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 32 },
@@ -22,12 +17,7 @@ const fadeUp = (delay = 0) => ({
   },
 });
 
-const VERBOS = [
-  'buscando',
-  'pensando',
-  'eligiendo',
-  'decidiendo',
-];
+const VERBOS = ['buscando', 'pensando', 'eligiendo', 'decidiendo'];
 
 export function HeroSection() {
   const [index, setIndex] = useState(0);
@@ -40,8 +30,10 @@ export function HeroSection() {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden" style={{ background: 'var(--color-cream)' }}>
-
+    <section
+      className="relative min-h-screen flex items-center overflow-hidden"
+      style={{ background: 'var(--color-cream)' }}
+    >
       {/* Textura grain */}
       <div
         className="absolute inset-0 z-0 opacity-[0.04] pointer-events-none"
@@ -51,11 +43,11 @@ export function HeroSection() {
         }}
       />
 
-      {/* Mancha de color cálida — fondo derecha */}
+      {/* Mancha cálida derecha */}
       <div
         className="absolute right-0 top-0 bottom-0 w-1/2 z-0 pointer-events-none"
         style={{
-          background: 'linear-gradient(135deg, transparent 30%, rgba(196,149,106,0.08) 100%)',
+          background: 'linear-gradient(135deg, transparent 30%, rgba(196,149,106,0.06) 100%)',
         }}
       />
 
@@ -67,7 +59,7 @@ export function HeroSection() {
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-2 gap-8 items-center py-28 md:py-0 min-h-screen">
 
-        {/* Columna izquierda */}
+        {/* ── Columna izquierda ── */}
         <div className="flex flex-col">
 
           {/* Eyebrow */}
@@ -89,7 +81,7 @@ export function HeroSection() {
             </span>
           </motion.div>
 
-          {/* Headline con palabra rotativa */}
+          {/* Headline con verbo rotativo */}
           <motion.div {...fadeUp(0.1)}>
             <h1
               className="font-black tracking-[-0.03em] mb-6"
@@ -101,11 +93,8 @@ export function HeroSection() {
               }}
             >
               <span className="block whitespace-nowrap">Tu próximo cliente</span>
-              
-              <span
-                className="block"
-                style={{ overflow: 'clip', paddingBottom: '0.15em' }}
-              >
+
+              <span className="block" style={{ overflow: 'clip', paddingBottom: '0.15em' }}>
                 ya está{' '}
                 <AnimatePresence mode="wait">
                   <motion.span
@@ -140,28 +129,31 @@ export function HeroSection() {
 
           {/* CTAs */}
           <motion.div {...fadeUp(0.3)} className="flex flex-wrap gap-4 mb-16">
-          <Link href="/login?modo=registro">
-            <button
-              className="px-8 py-4 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:opacity-90 hover:scale-[1.05] cursor-pointer"
-              style={{
-                background: 'var(--color-sand)',
-                color: 'var(--color-cream)',
-              }}
+            <Link href="/login?modo=registro">
+              <button
+                className="cursor-pointer px-8 py-4 rounded-lg text-sm font-semibold tracking-wide transition-all duration-300 hover:opacity-90 hover:scale-[1.03]"
+                style={{
+                  background: 'var(--color-sand)',
+                  color: 'var(--color-cream)',
+                }}
+              >
+                {heroData.ctaPrimary}
+              </button>
+            </Link>
+            <a
+              href="#como-funciona"
+              className="flex items-center gap-2 px-2 py-4 text-sm font-medium transition-all duration-300 hover:gap-4"
+              style={{ color: 'var(--color-ink-light)' }}
             >
-              {heroData.ctaPrimary}
-            </button>
-          </Link>
-          <a href="#como-funciona" className="flex items-center gap-2 px-2 py-4 text-sm font-medium transition-all duration-300 hover:gap-4 hover:font-bold"
-            style={{ color: 'var(--color-ink-light)' }}
-          >
-            <span>{heroData.ctaSecondary}</span>
-            <motion.span
-              animate={{ x: [0, 4, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}>
-              →
-            </motion.span>
-          </a>
-        </motion.div>
+              <span>{heroData.ctaSecondary}</span>
+              <motion.span
+                animate={{ x: [0, 4, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                →
+              </motion.span>
+            </a>
+          </motion.div>
 
           {/* Stats */}
           <motion.div
@@ -170,9 +162,9 @@ export function HeroSection() {
             style={{ borderTop: '1px solid rgba(26,26,26,0.08)' }}
           >
             {[
-              { valor: '0%', label: 'Comisiones' },
+              { valor: '0%',    label: 'Comisiones' },
               { valor: '2 min', label: 'Para publicar' },
-              { valor: '24/7', label: 'Visible siempre' },
+              { valor: '24/7',  label: 'Visible siempre' },
             ].map((stat, i) => (
               <div key={i} className="flex flex-col items-center gap-1">
                 <span
@@ -192,34 +184,31 @@ export function HeroSection() {
           </motion.div>
         </div>
 
-        {/* Mobile — mapa de fondo absoluto detrás del contenido */}
-        <div className="md:hidden  absolute inset-0 pointer-events-none overflow-hidden -z-50">
+        {/* ── Mobile: mockup de fondo ── */}
+        <div className="md:hidden absolute inset-0 pointer-events-none overflow-hidden -z-50">
           <div
             className="absolute right-[-10%] top-[10%] w-[80vw] h-[80%]"
-            style={{ opacity: 0.35 }}
+            style={{ opacity: 0.2 }}
           >
-            <MapaArgentina3D />
+            <MockupFeed />
           </div>
         </div>
 
-        {/* Desktop — mapa columna derecha */}
+        {/* ── Desktop: mockup columna derecha ── */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{
             duration: 1,
-            delay: 0.2,
+            delay: 0.3,
             ease: [0.16, 1, 0.3, 1] as MotionTransition['ease'],
           }}
           className="hidden md:flex items-center justify-center h-[75vh] relative"
         >
-          <div
-            className="absolute inset-0 rounded-3xl"
-            style={{ border: '1px solid rgba(26,26,26,0.06)' }}
-          />
-          <MapaArgentina3D />
+          <MockupFeed />
         </motion.div>
       </div>
+
       {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -231,7 +220,10 @@ export function HeroSection() {
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           className="w-px h-12"
-          style={{ background: 'linear-gradient(to bottom, var(--color-ink-light), transparent)', opacity: 0.6 }}
+          style={{
+            background: 'linear-gradient(to bottom, var(--color-ink-light), transparent)',
+            opacity: 0.6,
+          }}
         />
       </motion.div>
     </section>

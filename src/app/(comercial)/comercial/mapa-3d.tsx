@@ -78,7 +78,7 @@ export default function MapaArgentina3D() {
           rotateX,
           rotateY,
           transformStyle: 'preserve-3d' as const,
-          filter: 'drop-shadow(0 24px 48px rgba(26,26,26,0.12))',
+          filter: 'drop-shadow(0 24px 48px rgba(196,149,106,0.5))',
         }}
         animate={{ y: [0, -12, 0] }}
         transition={{ y: { duration: 8, ease: 'easeInOut', repeat: Infinity } }}
@@ -98,14 +98,14 @@ export default function MapaArgentina3D() {
           {/* Fill del país — crema más oscuro para contraste */}
           <path
             d={PATH_ARGENTINA}
-            fill="#DDD4C2"
-            stroke="#1A1A1A"
-            strokeWidth="2"
-            strokeLinejoin="round"
+            fill="#2A2520"
+            stroke="#C4956A"
+            strokeWidth="1"
+            strokeOpacity="0.3"
           />
 
          {/* Conexiones */}
-          <g fill="none" stroke="#1A1A1A" strokeWidth="1.2" strokeDasharray="4,8" opacity="0.35">
+          <g fill="none" stroke="#F5F0E8" strokeWidth="1.3" strokeDasharray="4,8" opacity="0.35">
             {CONNECTIONS.map((c) => (
               <path key={c.id} d={c.d}>
                 <animate
@@ -120,13 +120,13 @@ export default function MapaArgentina3D() {
 
           {/* Partículas */}
           {CONNECTIONS.flatMap((c, idx) => [
-            <circle key={`pa-${c.id}`} r="3" fill="#1A1A1A">
+            <circle key={`pa-${c.id}`} r="3" fill="#F5F0E8">
               <animateMotion dur={`${c.duration}s`} repeatCount="indefinite">
                 <mpath href={`#path-${c.id}`} />
               </animateMotion>
               <animate attributeName="opacity" values="0;0.7;0.7;0" dur={`${c.duration}s`} repeatCount="indefinite" />
             </circle>,
-            <circle key={`pb-${c.id}`} r="2.5" fill="#C4956A">
+            <circle key={`pb-${c.id}`} r="2.5" fill="#F5F0E8">
               <animateMotion dur={`${c.duration}s`} begin={`${idx * 0.35 + 0.9}s`} repeatCount="indefinite">
                 <mpath href={`#path-${c.id}`} />
               </animateMotion>
@@ -137,9 +137,9 @@ export default function MapaArgentina3D() {
           {/* Dots de destinos */}
           {DOTS.map((dot, i) => (
             <g key={i}>
-              <circle cx={dot.x} cy={dot.y} r="5" fill="#1A1A1A" opacity="0.8" />
-              <circle cx={dot.x} cy={dot.y} r="2.5" fill="#C4956A" />
-              <circle cx={dot.x} cy={dot.y} r="10" fill="none" stroke="#1A1A1A" strokeWidth="0.5" opacity="0.2">
+              <circle cx={dot.x} cy={dot.y} r="5" fill="#F5F0E8" opacity="0.7" />
+              <circle cx={dot.x} cy={dot.y} r="3" fill="#C4956A" />
+              <circle cx={dot.x} cy={dot.y} r="10" fill="none" stroke="#C4956A" strokeWidth="0.5" opacity="0.4">
                 <animate
                   attributeName="r"
                   values="8;14;8"
