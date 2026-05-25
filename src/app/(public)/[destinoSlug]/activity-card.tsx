@@ -1,256 +1,259 @@
-'use client';
+// src/app/(public)/[destinoSlug]/activity-card.tsx
+// Server Component — sin 'use client'
 
-import { useState } from 'react';
-import Link from 'next/link';
+import Link from 'next/link'
+import Image from 'next/image'
+import { ActivityStatus, ActivityType } from '@prisma/client'
 
-interface Activity {
-  id: string;
-  slug: string;
-  title: string;
-  shortDescription: string;
-  status: string;
-  statusNote: string | null;
-  isRecurring: boolean;
-  startDate: string | null;
-  priceFrom: number | null;
-  priceTo: number | null;
-  isFree: boolean;
-  whatsappMessage: string | null;
+// ─── Tipo que el page.tsx debe proveer al card ───────────────────────────────
+
+export type ActivityCardData = {
+  id: string
+  slug: string
+  title: string
+  shortDescription: string
+  status: ActivityStatus
+  statusNote: string | null
+  activityType: ActivityType
+  isRecurring: boolean
+  startDate: Date | null
+  endDate: Date | null
+  whatsappMessage: string | null
   provider: {
-    name: string;
-    whatsapp: string | null;
-  } | null;
-  categories: Array<{
-    category: { id: string; name: string };
-  }>;
+    name: string
+    whatsapp: string | null
+  } | null
+  media: {
+    url: string
+    altText: string | null
+    order: number
+  }[]
 }
 
-interface ActivityCardProps {
-  activity: Activity;
-  destinoSlug: string;
+type Props = {
+  activity: ActivityCardData
+  destinoSlug: string
 }
 
-const STATUS_CONFIG: Record<string, {
-  label: string;
-  color: string;
-  bg: string;
-  border: string;
-  pulse: boolean;
-}> = {
+// ─── Configuración de estados ────────────────────────────────────────────────
+
+const STATUS_CONFIG: Record<
+  ActivityStatus,
+  { label: string; badge: string; dot: string }
+> = {
   OPERATING: {
     label: 'Operando',
-    color: '#10B981',
-    bg: 'rgba(16,185,129,0.1)',
-    border: 'rgba(16,185,129,0.2)',
-    pulse: true,
+    badge: 'bg-emerald-500/[.18] border-emerald-500/40 text-emerald-400',
+    dot: 'bg-emerald-400',
   },
   LIMITED: {
     label: 'Cupo limitado',
-    color: '#F59E0B',
-    bg: 'rgba(245,158,11,0.1)',
-    border: 'rgba(245,158,11,0.2)',
-    pulse: true,
+    badge: 'bg-amber-500/[.18] border-amber-500/40 text-amber-400',
+    dot: 'bg-amber-400',
   },
   CLOSED: {
     label: 'Cerrado',
-    color: '#EF4444',
-    bg: 'rgba(239,68,68,0.1)',
-    border: 'rgba(239,68,68,0.2)',
-    pulse: false,
+    badge: 'bg-red-500/[.18] border-red-500/40 text-red-400',
+    dot: 'bg-red-400',
   },
   SOLD_OUT: {
     label: 'Sin cupos',
-    color: '#8B5CF6',
-    bg: 'rgba(139,92,246,0.1)',
-    border: 'rgba(139,92,246,0.2)',
-    pulse: false,
+    badge: 'bg-red-500/[.18] border-red-500/40 text-red-400',
+    dot: 'bg-red-400',
   },
-};
-
-function formatPrice(from: number | null, to: number | null, isFree: boolean) {
-  if (isFree) return 'Gratis';
-  if (!from) return 'Consultar';
-  const toNum = to ? Number(to) : null;
-  if (!toNum || Number(from) === toNum) return `$${Number(from).toLocaleString()}`;
-  return `Desde $${Number(from).toLocaleString()}`;
+  SCHEDULED: {
+    label: 'Próximamente',
+    badge: 'bg-blue-500/[.18] border-blue-500/40 text-blue-400',
+    dot: 'bg-blue-400',
+  },
 }
 
-function formatDate(dateStr: string | null) {
-  if (!dateStr) return null;
-  const date = new Date(dateStr);
-  return date.toLocaleDateString('es-AR', {
+// ─── Gradientes de fallback (cuando no hay foto) ─────────────────────────────
+// Un color por tipo de actividad — identidad visual sin imagen
+
+const TYPE_GRADIENT: Record<ActivityType, string> = {
+  EXCURSION:
+    'linear-gradient(135deg,#0D3B5A 0%,#1A6B8A 40%,#0E9AA7 70%,#1A3A4A 100%)',
+  CULTURAL_EVENT:
+    'linear-gradient(135deg,#2D1B4E 0%,#6B2D6B 45%,#C4534A 75%,#1A0D2E 100%)',
+  EXHIBITION:
+    'linear-gradient(135deg,#1A2D4E 0%,#2D4E6B 45%,#4E6B8A 75%,#0D1B2A 100%)',
+  ATTRACTION:
+    'linear-gradient(135deg,#0D2A1A 0%,#1A5C35 45%,#2D8A50 75%,#0D1A0D 100%)',
+  WORKSHOP:
+    'linear-gradient(135deg,#3A2D1A 0%,#6B4E2D 45%,#8A6B4E 75%,#1A0D00 100%)',
+  FESTIVAL:
+    'linear-gradient(135deg,#4A2700 0%,#C47A27 40%,#E8A845 65%,#5C3000 100%)',
+  GASTRONOMIC_EVENT:
+    'linear-gradient(135deg,#3A1A00 0%,#8A4E2D 40%,#C47A4E 65%,#5C2D00 100%)',
+  NIGHTLIFE_EVENT:
+    'linear-gradient(135deg,#1A0D2A 0%,#4E2D6B 40%,#8A4E8A 65%,#2D0D3A 100%)',
+}
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function formatDate(startDate: Date | null, endDate: Date | null): string | null {
+  if (!startDate) return null
+
+  const fmt = new Intl.DateTimeFormat('es-AR', {
     weekday: 'short',
     day: 'numeric',
     month: 'short',
-  });
+  })
+
+  const start = fmt.format(startDate)
+  if (!endDate) return `— ${start}`
+
+  const end = fmt.format(endDate)
+  return `— ${start} al ${end}`
 }
 
-export function ActivityCard({ activity, destinoSlug }: ActivityCardProps) {
-  const [pressed, setPressed] = useState(false);
-  const statusConfig = STATUS_CONFIG[activity.status];
-  const isClosed = activity.status === 'CLOSED' || activity.status === 'SOLD_OUT';
+function buildWhatsappUrl(whatsapp: string, title: string, customMessage: string | null): string {
+  const number = whatsapp.replace(/\D/g, '')
+  const message =
+    customMessage ?? `Hola, vi "${title}" en Andén y me gustaría consultar.`
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`
+}
 
-  const handleWhatsAppClick = () => {
-    if (!activity.provider?.whatsapp) return;
-    const number = activity.provider.whatsapp.replace(/\D/g, '');
-    const message = activity.whatsappMessage || `Hola! Vi tu actividad "${activity.title}" en Andén y me gustaría saber más.`;
-    const url = `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
-  };
+// ─── Componente ───────────────────────────────────────────────────────────────
+
+export function ActivityCard({ activity, destinoSlug }: Props) {
+  const statusCfg = STATUS_CONFIG[activity.status]
+  const isClosed = activity.status === 'CLOSED' || activity.status === 'SOLD_OUT'
+
+  // Primera imagen por orden; si no hay (o no se incluyó en el query) → gradiente
+  const coverMedia = (activity.media ?? []).sort((a, b) => a.order - b.order)[0] ?? null
+
+  const dateStr = formatDate(activity.startDate, activity.endDate)
+  const recurrenceLabel = activity.isRecurring ? 'Recurrente' : 'Eventual'
+
+  const whatsappUrl =
+    activity.provider?.whatsapp && !isClosed
+      ? buildWhatsappUrl(
+          activity.provider.whatsapp,
+          activity.title,
+          activity.whatsappMessage,
+        )
+      : null
+
+  const detailHref = `/${destinoSlug}/${activity.slug}`
 
   return (
-    <Link
-      href={`/${destinoSlug}/${activity.slug}`}
-      className="group relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer"
-      style={{
-        background: 'rgba(255,255,255,0.05)',
-        border: '1px solid rgba(255,255,255,0.09)',
-        opacity: isClosed ? 0.6 : 1,
-      }}
+    <article
+      className={[
+        'group rounded-2xl overflow-hidden flex flex-col',
+        'bg-[#1C1C1A] border border-white/8',
+        'transition-all duration-200 ease-out',
+        'hover:-translate-y-1 hover:border-white/[.14]',
+        isClosed ? 'opacity-60' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
-      {/* Top accent — color del estado */}
-      {statusConfig && (
-        <div
-          className="h-px w-full"
-          style={{ background: statusConfig.color, opacity: 0.4 }}
-        />
-      )}
-
-      <div className="flex flex-col flex-1 p-6 gap-4">
-
-        {/* Header — estado + tipo */}
-        <div className="flex items-start justify-between gap-3">
-          {statusConfig && (
-            <span
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium shrink-0"
-              style={{
-                color: statusConfig.color,
-                background: statusConfig.bg,
-                border: `1px solid ${statusConfig.border}`,
-              }}
-            >
-              {statusConfig.pulse ? (
-                <span className="relative flex h-1.5 w-1.5">
-                  <span
-                    className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                    style={{ background: statusConfig.color }}
-                  />
-                  <span
-                    className="relative inline-flex h-1.5 w-1.5 rounded-full"
-                    style={{ background: statusConfig.color }}
-                  />
-                </span>
-              ) : (
-                <span
-                  className="w-1.5 h-1.5 rounded-full"
-                  style={{ background: statusConfig.color }}
-                />
-              )}
-              {statusConfig.label}
-            </span>
-          )}
-
-          {/* Tipo badge */}
-          <span
-            className="text-xs px-2 py-0.5 rounded-full shrink-0"
-            style={{
-              color: 'rgba(255,255,255,0.3)',
-              border: '1px solid rgba(255,255,255,0.08)',
-            }}
-          >
-            {activity.isRecurring ? 'Recurrente' : 'Eventual'}
-          </span>
-        </div>
-
-        {/* Título */}
-        <div>
-          <h3
-            className="font-bold text-white leading-snug mb-1 group-hover:text-turquoise transition-colors duration-200"
-          >
-            {activity.title}
-          </h3>
-          {activity.provider && (
-            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
-              {activity.provider.name}
-            </p>
-          )}
-        </div>
-
-        {/* Descripción */}
-        <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
-          {activity.shortDescription}
-        </p>
-
-        {/* Fecha si es eventual */}
-        {!activity.isRecurring && activity.startDate && (
+      {/* ── Imagen ── */}
+      <Link href={detailHref} className="block relative aspect-video overflow-hidden cursor-pointer">
+        {coverMedia ? (
+          <Image
+            src={coverMedia.url}
+            alt={coverMedia.altText ?? activity.title}
+            fill
+            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        ) : (
           <div
-            className="flex items-center gap-2 text-xs"
-            style={{ color: 'rgba(255,255,255,0.4)' }}
-          >
-            <span style={{ color: 'rgba(255,255,255,0.3)' }}>—</span>
-            <span>{formatDate(activity.startDate)}</span>
-          </div>
+            aria-hidden
+            className="absolute inset-0"
+            style={{ background: TYPE_GRADIENT[activity.activityType] }}
+          />
         )}
 
-        {/* Nota de estado */}
-        {activity.statusNote && (
-          <p
-            className="text-xs italic leading-relaxed"
-            style={{ color: 'rgba(255,255,255,0.3)' }}
-          >
-            {activity.statusNote}
+        {/* Fade hacia el body */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-linear-to-b from-transparent from-30% to-[#1C1C1A]/90"
+        />
+
+        {/* Badge de estado — esquina superior izquierda */}
+        <div
+          className={[
+            'absolute top-2.5 left-2.5',
+            'flex items-center gap-1.5 px-2.5 py-1',
+            'rounded-full border text-[11px] font-medium',
+            'backdrop-blur-sm',
+            statusCfg.badge,
+          ].join(' ')}
+        >
+          <span className={`size-[5px] rounded-full shrink-0 ${statusCfg.dot}`} />
+          {statusCfg.label}
+        </div>
+
+        {/* Badge de tipo — esquina superior derecha */}
+        <div className="absolute top-2.5 right-2.5 px-2 py-1 rounded-full text-[10px] font-medium uppercase tracking-[0.06em] text-white/50 bg-black/30 border border-white/12 backdrop-blur-sm">
+          {recurrenceLabel}
+        </div>
+      </Link>
+
+      {/* ── Body ── */}
+      <div className="px-4 pt-3.5 pb-4 flex flex-col flex-1">
+        {/* Nombre del prestador */}
+        {activity.provider && (
+          <p className="text-[11px] text-white/35 uppercase tracking-[0.07em] mb-1">
+            {activity.provider.name}
           </p>
         )}
 
-        {/* Categorías */}
-        {activity.categories.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {activity.categories.slice(0, 2).map(({ category }) => (
-              <span
-                key={category.id}
-                className="text-xs px-2 py-0.5 rounded-full"
-                style={{
-                  color: 'rgba(255,255,255,0.35)',
-                  border: '1px solid rgba(255,255,255,0.07)',
-                }}
-              >
-                {category.name}
-              </span>
-            ))}
-          </div>
-        )}
+        {/* Título en Playfair */}
+        <Link href={detailHref} className="block cursor-pointer">
+          <h3 className="font-playfair text-lg font-bold text-cream leading-snug tracking-[-0.02em] mb-2 line-clamp-2">
+            {activity.title}
+          </h3>
+        </Link>
 
-        {/* Footer — precio + CTA */}
-        <div className="flex items-center justify-between mt-auto pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-          <span className="text-sm font-semibold" style={{ color: '#00D9C0' }}>
-            {formatPrice(activity.priceFrom, activity.priceTo, activity.isFree)}
+        {/* Descripción corta */}
+        <p className="text-xs text-white/45 leading-relaxed mb-3.5 line-clamp-2">
+          {activity.shortDescription}
+        </p>
+
+        {/* Footer: fecha + CTA */}
+        <div className="border-t border-white/6 mt-auto pt-3 flex items-center justify-between gap-2">
+          {/* Fecha / frecuencia */}
+          <span className="text-[11px] text-white/30 shrink-0">
+            {dateStr ?? (activity.isRecurring ? 'Recurrente' : null)}
           </span>
 
-          {activity.provider?.whatsapp && !isClosed ? (
-            <button
-              onClick={handleWhatsAppClick}
-              onMouseDown={() => setPressed(true)}
-              onMouseUp={() => setPressed(false)}
-              className="cursor-pointer text-xs font-semibold px-4 py-2 rounded-full transition-all duration-200"
-              style={{
-                background: pressed ? 'rgba(0,217,192,0.2)' : 'rgba(0,217,192,0.1)',
-                border: '1px solid rgba(0,217,192,0.3)',
-                color: '#00D9C0',
-                transform: pressed ? 'scale(0.97)' : 'scale(1)',
-              }}
+          {/* CTA principal */}
+          {whatsappUrl ? (
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={[
+                'text-xs font-medium shrink-0 cursor-pointer',
+                'px-3 py-1.5 rounded-full',
+                'text-[#00D9C0] border border-[#00D9C0]/30 bg-[#00D9C0]/[.07]',
+                'transition-all duration-180 ease-out',
+                'hover:bg-[#00D9C0] hover:text-[#0D1B2A] hover:border-[#00D9C0] hover:scale-[1.04]',
+              ].join(' ')}
             >
-              Consultar →
-            </button>
+              Contactar →
+            </a>
           ) : (
-            <span
-              className="text-xs"
-              style={{ color: 'rgba(255,255,255,0.2)' }}
+            <Link
+              href={detailHref}
+              className={[
+                'text-xs font-medium shrink-0 cursor-pointer',
+                'px-3 py-1.5 rounded-full',
+                'text-white/30 border border-white/10',
+                'transition-colors duration-150',
+                'hover:text-white/50',
+              ].join(' ')}
             >
-              {isClosed ? 'No disponible' : 'Sin contacto'}
-            </span>
+              Ver detalle →
+            </Link>
           )}
         </div>
       </div>
-    </Link>
-  );
+    </article>
+  )
 }

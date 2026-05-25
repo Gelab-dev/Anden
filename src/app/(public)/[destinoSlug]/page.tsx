@@ -9,6 +9,7 @@ interface PageProps {
 type ActivityWithRelations = Awaited<ReturnType<typeof prisma.activity.findMany>>[number] & {
   categories: { category: { id: string; name: string } }[];
   provider: { name: string; whatsapp: string | null } | null;
+  media: { url: string; altText: string | null; order: number }[];
 };
 
 export async function generateMetadata({ params }: PageProps) {
@@ -39,6 +40,7 @@ export default async function DestinoPage({ params }: PageProps) {
         include: {
           categories: { include: { category: true } },
           provider: true,
+          media: { orderBy: { order: 'asc' } },
         },
         orderBy: [
           { isFeatured: 'desc' },
@@ -57,8 +59,10 @@ export default async function DestinoPage({ params }: PageProps) {
     shortDescription: activity.shortDescription,
     status: activity.status,
     statusNote: activity.statusNote,
+    activityType: activity.activityType,
     isRecurring: activity.isRecurring,
-    startDate: activity.startDate?.toISOString() ?? null,
+    startDate: activity.startDate ?? null,
+    endDate: activity.endDate ?? null,
     priceFrom: activity.priceFrom ? Number(activity.priceFrom) : null,
     priceTo: activity.priceTo ? Number(activity.priceTo) : null,
     isFree: activity.isFree,
@@ -69,6 +73,11 @@ export default async function DestinoPage({ params }: PageProps) {
           whatsapp: activity.provider.whatsapp,
         }
       : null,
+    media: activity.media.map((m) => ({
+      url: m.url,
+      altText: m.altText,
+      order: m.order,
+    })),
     categories: activity.categories.map(({ category }: { category: { id: string; name: string } }) => ({
       category: { id: category.id, name: category.name },
     })),
@@ -150,7 +159,10 @@ export default async function DestinoPage({ params }: PageProps) {
                 <p className="text-xs font-mono tracking-[0.2em] uppercase text-turquoise mb-6">
                   Operando ahora
                 </p>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div
+                  className="grid gap-4"
+                  style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}
+                >
                   {operando.map((activity) => (
                     <ActivityCard
                       key={activity.id}
@@ -168,7 +180,10 @@ export default async function DestinoPage({ params }: PageProps) {
                 <p className="text-xs font-mono tracking-[0.2em] uppercase text-gray-600 mb-6">
                   Otras actividades
                 </p>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div
+                  className="grid gap-4"
+                  style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}
+                >
                   {resto.map((activity) => (
                     <ActivityCard
                       key={activity.id}

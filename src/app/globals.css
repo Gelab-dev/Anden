@@ -5,6 +5,8 @@
      ANDÉN — Design Tokens
      ============================================ */
 
+  --font-playfair: 'Playfair Display', serif;
+
   /* Colores principales */
   --color-turquoise: #00d9c0;
   --color-turquoise-dark: #00b39f;
