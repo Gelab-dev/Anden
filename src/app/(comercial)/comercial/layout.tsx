@@ -1,16 +1,5 @@
 import type { Metadata } from 'next';
-import { Playfair_Display, DM_Sans } from 'next/font/google';
 import { NavbarComercial } from './components/navbar-comercial';
-
-const playfair = Playfair_Display({
-  subsets: ['latin'],
-  variable: '--font-playfair',
-});
-
-const dmSans = DM_Sans({
-  subsets: ['latin'],
-  variable: '--font-dm-sans',
-});
 
 export const metadata: Metadata = {
   title: 'Andén para negocios — Tu actividad, visible cuando importa',
@@ -47,7 +36,6 @@ export default function ComercialLayout({
 }) {
   return (
     <div
-      className={`${playfair.variable} ${dmSans.variable}`}
       style={{
         fontFamily: 'var(--font-dm-sans), system-ui, sans-serif',
         background: 'var(--color-cream)',
