@@ -170,11 +170,11 @@ export function ImageUploader({
           className="cursor-pointer rounded-xl border-2 border-dashed transition-all duration-200 flex flex-col items-center justify-center gap-2 py-8 px-4 text-center"
           style={{
             borderColor: dragOver
-              ? 'var(--color-sand)'
-              : 'var(--color-surface-border)',
+              ? 'var(--color-signal)'
+              : 'var(--color-board-line)',
             background: dragOver
               ? 'rgba(196,149,106,0.05)'
-              : 'var(--color-surface-3)',
+              : 'var(--color-board-3)',
           }}
         >
           <svg
@@ -300,7 +300,7 @@ export function ImageUploader({
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div
                       className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin"
-                      style={{ borderColor: 'var(--color-sand)', borderTopColor: 'transparent' }}
+                      style={{ borderColor: 'var(--color-signal)', borderTopColor: 'transparent' }}
                     />
                   </div>
                 </>

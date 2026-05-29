@@ -22,7 +22,7 @@ export function StickyBar() {
       {/* CTA final */}
       <section
         className="relative py-48 px-6 md:px-12 overflow-hidden"
-        style={{ background: 'var(--color-cream-dark)' }}
+        style={{ background: 'var(--color-cream-2)' }}
       >
         {/* Borde superior */}
         <div
@@ -64,7 +64,7 @@ export function StickyBar() {
               />
               <span
                 className="text-xs font-mono tracking-[0.2em] uppercase"
-                style={{ color: 'var(--color-ink-light)' }}
+                style={{ color: 'var(--color-ink-soft)' }}
               >
                 Es tu momento
               </span>
@@ -88,7 +88,7 @@ export function StickyBar() {
 
             <p
               className="text-lg leading-relaxed max-w-xl mx-auto mb-12"
-              style={{ color: 'var(--color-ink-light)' }}
+              style={{ color: 'var(--color-ink-soft)' }}
             >
               {ctaFinalData.subheadline}
             </p>
@@ -147,7 +147,7 @@ export function StickyBar() {
               <div className="hidden md:flex items-center gap-6">
               <p
                 className="text-sm"
-                style={{ color: 'var(--color-ink-light)' }}
+                style={{ color: 'var(--color-ink-soft)' }}
               >
                 <span
                   className="font-semibold"
@@ -163,7 +163,7 @@ export function StickyBar() {
                   <button
                     className="cursor-pointer px-6 py-3 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:opacity-90 hover:scale-[1.02]"
                     style={{
-                      background: 'var(--color-sand)',
+                      background: 'var(--color-signal)',
                       color: 'var(--color-cream)',
                     }}
                   >

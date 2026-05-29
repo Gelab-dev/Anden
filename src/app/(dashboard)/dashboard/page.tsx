@@ -149,7 +149,7 @@ export default async function DashboardPage() {
             <Link href="/dashboard/crear-perfil">
               <button
                 className="cursor-pointer px-8 py-3 rounded-lg text-sm font-semibold tracking-wide transition-all duration-200 hover:opacity-90"
-                style={{ background: 'var(--color-sand)', color: '#1A1A1A' }}
+                style={{ background: 'var(--color-signal)', color: '#1A1A1A' }}
               >
                 Crear mi perfil
               </button>
@@ -213,7 +213,7 @@ export default async function DashboardPage() {
               <Link href="/dashboard/nueva-actividad" className="hidden md:block">
                 <button
                   className="cursor-pointer flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 hover:opacity-80"
-                  style={{ background: 'var(--color-sand)', color: '#1A1A1A' }}
+                  style={{ background: 'var(--color-signal)', color: '#1A1A1A' }}
                 >
                   + Nueva actividad
                 </button>
@@ -262,7 +262,7 @@ export default async function DashboardPage() {
                     className="text-4xl font-black tracking-tight leading-none"
                     style={{
                       fontFamily: 'var(--font-display)',
-                      color: stat.accent ? 'var(--color-sand)' : '#EDEBE8',
+                      color: stat.accent ? 'var(--color-signal)' : '#EDEBE8',
                     }}
                   >
                     {stat.valor}
@@ -300,7 +300,7 @@ export default async function DashboardPage() {
                   <Link href="/dashboard/nueva-actividad">
                     <button
                       className="cursor-pointer px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-300 hover:opacity-90"
-                      style={{ background: 'var(--color-sand)', color: '#1A1A1A' }}
+                      style={{ background: 'var(--color-signal)', color: '#1A1A1A' }}
                     >
                       Publicar mi primera actividad
                     </button>
@@ -382,7 +382,7 @@ export default async function DashboardPage() {
               <Link href="/dashboard/nueva-actividad">
                 <button
                   className="cursor-pointer w-full py-4 rounded-lg text-sm font-semibold"
-                  style={{ background: 'var(--color-sand)', color: '#1A1A1A' }}
+                  style={{ background: 'var(--color-signal)', color: '#1A1A1A' }}
                 >
                   + Nueva actividad
                 </button>

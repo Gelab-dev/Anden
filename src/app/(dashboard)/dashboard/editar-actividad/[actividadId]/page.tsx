@@ -25,23 +25,23 @@ function FieldLabel({ htmlFor, children, required }: {
       style={{ color: 'rgba(237,235,232,0.7)' }}
     >
       {children}
-      {required && <span style={{ color: 'var(--color-sand)' }}> *</span>}
+      {required && <span style={{ color: 'var(--color-signal)' }}> *</span>}
     </label>
   );
 }
 
 const inputStyle = {
-  background: 'var(--color-surface-3)',
-  border: '1px solid var(--color-surface-border)',
+  background: 'var(--color-board-3)',
+  border: '1px solid var(--color-board-line)',
   color: '#EDEBE8',
 };
 
 const inputFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-  e.target.style.borderColor = 'var(--color-sand)';
+  e.target.style.borderColor = 'var(--color-signal)';
 };
 
 const inputBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-  e.target.style.borderColor = 'var(--color-surface-border)';
+  e.target.style.borderColor = 'var(--color-board-line)';
 };
 
 export default function EditarActividadPage({ params }: PageProps) {
@@ -153,7 +153,7 @@ export default function EditarActividadPage({ params }: PageProps) {
             <div
               key={i}
               className="h-12 rounded-xl animate-pulse"
-              style={{ background: 'var(--color-surface-2)' }}
+              style={{ background: 'var(--color-board-2)' }}
             />
           ))}
         </div>
@@ -190,7 +190,7 @@ export default function EditarActividadPage({ params }: PageProps) {
           </Link>
           <p
             className="text-xs font-mono tracking-[0.2em] uppercase mb-4"
-            style={{ color: 'var(--color-sand)' }}
+            style={{ color: 'var(--color-signal)' }}
           >
             Editar actividad
           </p>
@@ -206,7 +206,7 @@ export default function EditarActividadPage({ params }: PageProps) {
 
           {/* Información básica */}
           <section className="space-y-6">
-            <p className="text-xs font-mono tracking-[0.2em] uppercase" style={{ color: 'var(--color-sand)' }}>
+            <p className="text-xs font-mono tracking-[0.2em] uppercase" style={{ color: 'var(--color-signal)' }}>
               Información básica
             </p>
 
@@ -259,9 +259,9 @@ export default function EditarActividadPage({ params }: PageProps) {
           {/* Imágenes */}
           <section
             className="space-y-6 pt-10"
-            style={{ borderTop: '1px solid var(--color-surface-border)' }}
+            style={{ borderTop: '1px solid var(--color-board-line)' }}
           >
-            <p className="text-xs font-mono tracking-[0.2em] uppercase" style={{ color: 'var(--color-sand)' }}>
+            <p className="text-xs font-mono tracking-[0.2em] uppercase" style={{ color: 'var(--color-signal)' }}>
               Imágenes
             </p>
             <ImageUploader
@@ -277,9 +277,9 @@ export default function EditarActividadPage({ params }: PageProps) {
           {/* Fechas / Horarios */}
           <section
             className="space-y-6 pt-10"
-            style={{ borderTop: '1px solid var(--color-surface-border)' }}
+            style={{ borderTop: '1px solid var(--color-board-line)' }}
           >
-            <p className="text-xs font-mono tracking-[0.2em] uppercase" style={{ color: 'var(--color-sand)' }}>
+            <p className="text-xs font-mono tracking-[0.2em] uppercase" style={{ color: 'var(--color-signal)' }}>
               {formData.isRecurring ? 'Horarios' : 'Fechas'}
             </p>
 
@@ -333,9 +333,9 @@ export default function EditarActividadPage({ params }: PageProps) {
           {/* Precio */}
           <section
             className="space-y-6 pt-10"
-            style={{ borderTop: '1px solid var(--color-surface-border)' }}
+            style={{ borderTop: '1px solid var(--color-board-line)' }}
           >
-            <p className="text-xs font-mono tracking-[0.2em] uppercase" style={{ color: 'var(--color-sand)' }}>
+            <p className="text-xs font-mono tracking-[0.2em] uppercase" style={{ color: 'var(--color-signal)' }}>
               Precio
             </p>
 
@@ -343,8 +343,8 @@ export default function EditarActividadPage({ params }: PageProps) {
               <div
                 className="relative w-10 h-6 rounded-full transition-colors duration-200 cursor-pointer"
                 style={{
-                  background: formData.isFree ? 'var(--color-sand)' : 'var(--color-surface-3)',
-                  border: '1px solid var(--color-surface-border)',
+                  background: formData.isFree ? 'var(--color-signal)' : 'var(--color-board-3)',
+                  border: '1px solid var(--color-board-line)',
                 }}
                 onClick={() => set('isFree', !formData.isFree)}
               >
@@ -396,9 +396,9 @@ export default function EditarActividadPage({ params }: PageProps) {
           {/* Capacidad y contacto */}
           <section
             className="space-y-6 pt-10"
-            style={{ borderTop: '1px solid var(--color-surface-border)' }}
+            style={{ borderTop: '1px solid var(--color-board-line)' }}
           >
-            <p className="text-xs font-mono tracking-[0.2em] uppercase" style={{ color: 'var(--color-sand)' }}>
+            <p className="text-xs font-mono tracking-[0.2em] uppercase" style={{ color: 'var(--color-signal)' }}>
               Capacidad y contacto
             </p>
 
@@ -439,13 +439,13 @@ export default function EditarActividadPage({ params }: PageProps) {
           {/* Submit */}
           <div
             className="flex gap-4 pt-4"
-            style={{ borderTop: '1px solid var(--color-surface-border)' }}
+            style={{ borderTop: '1px solid var(--color-board-line)' }}
           >
             <button
               type="submit"
               disabled={loading}
               className="cursor-pointer flex-1 py-4 rounded-full text-base font-semibold tracking-wide transition-all duration-300 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ background: 'var(--color-sand)', color: '#1A1A1A' }}
+              style={{ background: 'var(--color-signal)', color: '#1A1A1A' }}
             >
               {loading ? 'Guardando...' : 'Guardar cambios'}
             </button>
@@ -454,7 +454,7 @@ export default function EditarActividadPage({ params }: PageProps) {
               onClick={() => router.back()}
               className="cursor-pointer px-6 py-4 rounded-full text-base font-medium transition-all duration-200 hover:opacity-70"
               style={{
-                border: '1px solid var(--color-surface-border)',
+                border: '1px solid var(--color-board-line)',
                 color: 'rgba(237,235,232,0.5)',
               }}
             >

@@ -76,7 +76,7 @@ function LoginForm() {
   };
 
   const inputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.style.borderColor = 'var(--color-sand)';
+    e.target.style.borderColor = 'var(--color-signal)';
     e.target.style.background = 'rgba(255,255,255,0.06)';
   };
 
@@ -88,7 +88,7 @@ function LoginForm() {
   return (
     <div
       className="min-h-screen flex"
-      style={{ background: 'var(--color-surface)' }}
+      style={{ background: 'var(--color-board-2)' }}
     >
       {/* Panel izquierdo — branding */}
       <div
@@ -106,7 +106,7 @@ function LoginForm() {
         <div>
           <p
             className="text-xs font-mono tracking-[0.2em] uppercase mb-6"
-            style={{ color: 'var(--color-sand)' }}
+            style={{ color: 'var(--color-signal)' }}
           >
             Para negocios
           </p>
@@ -250,7 +250,7 @@ function LoginForm() {
               type="submit"
               disabled={loading}
               className="cursor-pointer w-full h-11 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
-              style={{ background: 'var(--color-sand)', color: '#1A1A1A' }}
+              style={{ background: 'var(--color-signal)', color: '#1A1A1A' }}
             >
               {loading
                 ? 'Un momento...'
@@ -269,7 +269,7 @@ function LoginForm() {
             <button
               onClick={() => { setIsSignUp(!isSignUp); setError(''); }}
               className="cursor-pointer font-medium transition-opacity hover:opacity-70"
-              style={{ color: 'var(--color-sand)' }}
+              style={{ color: 'var(--color-signal)' }}
             >
               {isSignUp ? 'Iniciá sesión' : 'Registrate gratis'}
             </button>

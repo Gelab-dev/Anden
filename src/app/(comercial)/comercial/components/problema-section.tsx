@@ -14,7 +14,7 @@ export function ProblemaSection() {
       id="problema"
       ref={ref}
       className="relative py-40 px-6 md:px-12 overflow-hidden"
-      style={{ background: 'var(--color-cream-dark)' }}
+      style={{ background: 'var(--color-cream-2)' }}
     >
       {/* Borde superior */}
       <div
@@ -45,7 +45,7 @@ export function ProblemaSection() {
         >
           <span
             className="text-xs font-mono tracking-[0.2em] uppercase"
-            style={{ color: 'var(--color-ink-light)' }}
+            style={{ color: 'var(--color-ink-soft)' }}
           >
             El problema
           </span>
@@ -97,7 +97,7 @@ export function ProblemaSection() {
                 </h3>
                 <p
                   className="text-sm md:text-base leading-relaxed max-w-xl"
-                  style={{ color: 'var(--color-ink-light)' }}
+                  style={{ color: 'var(--color-ink-soft)' }}
                 >
                   {item.descripcion}
                 </p>
@@ -106,7 +106,7 @@ export function ProblemaSection() {
               {/* Línea de acento izquierda al hover */}
               <div
                 className="absolute left-0 top-0 bottom-0 w-px scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"
-                style={{ background: 'var(--color-sand)' }}
+                style={{ background: 'var(--color-signal)' }}
               />
             </motion.div>
           ))}

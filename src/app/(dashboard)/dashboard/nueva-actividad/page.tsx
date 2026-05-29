@@ -21,7 +21,7 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <h2
       className="text-xs font-mono tracking-[0.2em] uppercase mb-6"
-      style={{ color: 'var(--color-sand)' }}
+      style={{ color: 'var(--color-signal)' }}
     >
       {children}
     </h2>
@@ -40,23 +40,23 @@ function FieldLabel({ htmlFor, children, required }: {
       style={{ color: 'rgba(237,235,232,0.7)' }}
     >
       {children}
-      {required && <span style={{ color: 'var(--color-sand)' }}> *</span>}
+      {required && <span style={{ color: 'var(--color-signal)' }}> *</span>}
     </label>
   );
 }
 
 const inputStyle = {
-  background: 'var(--color-surface-3)',
-  border: '1px solid var(--color-surface-border)',
+  background: 'var(--color-board-3)',
+  border: '1px solid var(--color-board-line)',
   color: '#EDEBE8',
 };
 
 const inputFocusHandler = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-  e.target.style.borderColor = 'var(--color-sand)';
+  e.target.style.borderColor = 'var(--color-signal)';
 };
 
 const inputBlurHandler = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-  e.target.style.borderColor = 'var(--color-surface-border)';
+  e.target.style.borderColor = 'var(--color-board-line)';
 };
 
 export default function NuevaActividadPage() {
@@ -124,7 +124,7 @@ export default function NuevaActividadPage() {
         <div className="mb-12">
           <p
             className="text-xs font-mono tracking-[0.2em] uppercase mb-4"
-            style={{ color: 'var(--color-sand)' }}
+            style={{ color: 'var(--color-signal)' }}
           >
             Nueva actividad
           </p>
@@ -152,11 +152,11 @@ export default function NuevaActividadPage() {
                   onClick={() => setTipo(t.value)}
                   className="cursor-pointer text-left p-5 rounded-xl transition-all duration-200"
                   style={{
-                    background: tipo === t.value ? 'rgba(196,149,106,0.12)' : 'var(--color-surface-3)',
-                    border: `1px solid ${tipo === t.value ? 'var(--color-sand)' : 'var(--color-surface-border)'}`,
+                    background: tipo === t.value ? 'rgba(196,149,106,0.12)' : 'var(--color-board-3)',
+                    border: `1px solid ${tipo === t.value ? 'var(--color-signal)' : 'var(--color-board-line)'}`,
                   }}
                 >
-                  <p className="font-semibold text-sm mb-1" style={{ color: tipo === t.value ? 'var(--color-sand)' : '#EDEBE8' }}>
+                  <p className="font-semibold text-sm mb-1" style={{ color: tipo === t.value ? 'var(--color-signal)' : '#EDEBE8' }}>
                     {t.label}
                   </p>
                   <p className="text-xs leading-relaxed" style={{ color: 'rgba(237,235,232,0.4)' }}>
@@ -170,7 +170,7 @@ export default function NuevaActividadPage() {
           {/* Información básica */}
           <section
             className="space-y-6 pt-12"
-            style={{ borderTop: '1px solid var(--color-surface-border)' }}
+            style={{ borderTop: '1px solid var(--color-board-line)' }}
           >
             <SectionTitle>Información básica</SectionTitle>
 
@@ -226,7 +226,7 @@ export default function NuevaActividadPage() {
           {/* Imágenes */}
           <section
             className="space-y-6 pt-12"
-            style={{ borderTop: '1px solid var(--color-surface-border)' }}
+            style={{ borderTop: '1px solid var(--color-board-line)' }}
           >
             <SectionTitle>Imágenes</SectionTitle>
             <ImageUploader
@@ -242,7 +242,7 @@ export default function NuevaActividadPage() {
           {/* Fechas / Horarios */}
           <section
             className="space-y-6 pt-12"
-            style={{ borderTop: '1px solid var(--color-surface-border)' }}
+            style={{ borderTop: '1px solid var(--color-board-line)' }}
           >
             <SectionTitle>{tipo === 'eventual' ? 'Fechas' : 'Horarios'}</SectionTitle>
 
@@ -301,7 +301,7 @@ export default function NuevaActividadPage() {
           {/* Precio */}
           <section
             className="space-y-6 pt-12"
-            style={{ borderTop: '1px solid var(--color-surface-border)' }}
+            style={{ borderTop: '1px solid var(--color-board-line)' }}
           >
             <SectionTitle>Precio</SectionTitle>
 
@@ -309,8 +309,8 @@ export default function NuevaActividadPage() {
               <div
                 className="relative w-10 h-6 rounded-full transition-colors duration-200 cursor-pointer"
                 style={{
-                  background: formData.isFree ? 'var(--color-sand)' : 'var(--color-surface-3)',
-                  border: '1px solid var(--color-surface-border)',
+                  background: formData.isFree ? 'var(--color-signal)' : 'var(--color-board-3)',
+                  border: '1px solid var(--color-board-line)',
                 }}
                 onClick={() => set('isFree', !formData.isFree)}
               >
@@ -364,7 +364,7 @@ export default function NuevaActividadPage() {
           {/* Capacidad */}
           <section
             className="space-y-6 pt-12"
-            style={{ borderTop: '1px solid var(--color-surface-border)' }}
+            style={{ borderTop: '1px solid var(--color-board-line)' }}
           >
             <SectionTitle>Capacidad</SectionTitle>
             <div className="flex flex-col gap-2">
@@ -389,7 +389,7 @@ export default function NuevaActividadPage() {
           {/* Estado */}
           <section
             className="space-y-6 pt-12"
-            style={{ borderTop: '1px solid var(--color-surface-border)' }}
+            style={{ borderTop: '1px solid var(--color-board-line)' }}
           >
             <SectionTitle>Estado actual</SectionTitle>
 
@@ -430,7 +430,7 @@ export default function NuevaActividadPage() {
           {/* WhatsApp */}
           <section
             className="space-y-6 pt-12"
-            style={{ borderTop: '1px solid var(--color-surface-border)' }}
+            style={{ borderTop: '1px solid var(--color-board-line)' }}
           >
             <SectionTitle>Contacto</SectionTitle>
             <div className="flex flex-col gap-2">
@@ -460,13 +460,13 @@ export default function NuevaActividadPage() {
           {/* Submit */}
           <div
             className="flex gap-4 pt-4"
-            style={{ borderTop: '1px solid var(--color-surface-border)' }}
+            style={{ borderTop: '1px solid var(--color-board-line)' }}
           >
             <button
               type="submit"
               disabled={loading}
               className="cursor-pointer flex-1 py-4 rounded-full text-base font-semibold tracking-wide transition-all duration-300 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ background: 'var(--color-sand)', color: '#1A1A1A' }}
+              style={{ background: 'var(--color-signal)', color: '#1A1A1A' }}
             >
               {loading ? 'Publicando...' : 'Publicar actividad'}
             </button>
@@ -475,7 +475,7 @@ export default function NuevaActividadPage() {
               onClick={() => router.back()}
               className="cursor-pointer px-6 py-4 rounded-full text-base font-medium transition-all duration-200 hover:opacity-70"
               style={{
-                border: '1px solid var(--color-surface-border)',
+                border: '1px solid var(--color-board-line)',
                 color: 'rgba(237,235,232,0.5)',
               }}
             >

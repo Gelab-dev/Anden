@@ -28,7 +28,7 @@ export function SolucionSection() {
         >
           <span
             className="text-xs font-mono tracking-[0.2em] uppercase"
-            style={{ color: 'var(--color-ink-light)' }}
+            style={{ color: 'var(--color-ink-soft)' }}
           >
             La solución
           </span>
@@ -73,7 +73,7 @@ export function SolucionSection() {
               {/* Línea sand top al hover */}
               <div
                 className="absolute top-0 inset-x-0 h-px scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"
-                style={{ background: 'var(--color-sand)' }}
+                style={{ background: 'var(--color-signal)' }}
               />
 
               <h3
@@ -84,7 +84,7 @@ export function SolucionSection() {
               </h3>
               <p
                 className="text-sm leading-relaxed"
-                style={{ color: 'var(--color-ink-light)' }}
+                style={{ color: 'var(--color-ink-soft)' }}
               >
                 {item.descripcion}
               </p>
@@ -107,7 +107,7 @@ export function SolucionSection() {
             <button
               className=" cursor-pointer px-8 py-4 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:opacity-90 hover:scale-[1.02]"
               style={{
-                background: 'var(--color-sand)',
+                background: 'var(--color-signal)',
                 color: 'var(--color-cream)',
               }}
             >

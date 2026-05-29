@@ -12,7 +12,7 @@ export default async function DashboardLayout({
     <div
       style={{
         fontFamily: 'var(--font-dm-sans), system-ui, sans-serif',
-        background: 'var(--color-surface)',
+        background: 'var(--color-board-2)',
         color: '#EDEBE8',
         minHeight: '100vh',
       }}

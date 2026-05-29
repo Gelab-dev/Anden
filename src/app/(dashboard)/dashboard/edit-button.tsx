@@ -11,18 +11,18 @@ export function EditButton({ href }: { href: string }) {
         hover:text-sand hover:border-[rgba(196,149,106,0.4)] hover:bg-[rgba(196,149,106,0.08)]"
         style={{
           color: 'rgba(237,235,232,0.5)',
-          border: '0.5px solid var(--color-surface-border)',
+          border: '0.5px solid var(--color-board-line)',
         }}
         onMouseEnter={(e) => {
           const t = e.currentTarget
-          t.style.color = 'var(--color-sand)'
+          t.style.color = 'var(--color-signal)'
           t.style.borderColor = 'rgba(196,149,106,0.4)'
           t.style.background = 'rgba(196,149,106,0.08)'
         }}
         onMouseLeave={(e) => {
           const t = e.currentTarget
           t.style.color = 'rgba(237,235,232,0.5)'
-          t.style.borderColor = 'var(--color-surface-border)'
+          t.style.borderColor = 'var(--color-board-line)'
           t.style.background = 'transparent'
         }}
       >

@@ -73,7 +73,7 @@ export default function CrearPerfilPage() {
         <div className="mb-12">
           <p
             className="text-xs font-mono tracking-[0.2em] uppercase mb-4"
-            style={{ color: 'var(--color-sand)' }}
+            style={{ color: 'var(--color-signal)' }}
           >
             Paso 1 de 1
           </p>
@@ -102,8 +102,8 @@ export default function CrearPerfilPage() {
             <div
               className="h-12 px-4 rounded-xl flex items-center text-base"
               style={{
-                background: 'var(--color-surface-3)',
-                border: '1px solid var(--color-surface-border)',
+                background: 'var(--color-board-3)',
+                border: '1px solid var(--color-board-line)',
                 color: 'rgba(237,235,232,0.4)',
               }}
             >
@@ -139,7 +139,7 @@ export default function CrearPerfilPage() {
               className="text-sm font-semibold"
               style={{ color: 'rgba(237,235,232,0.7)' }}
             >
-              WhatsApp <span style={{ color: 'var(--color-sand)' }}>*</span>
+              WhatsApp <span style={{ color: 'var(--color-signal)' }}>*</span>
             </label>
             <input
               id="whatsapp"
@@ -150,12 +150,12 @@ export default function CrearPerfilPage() {
               required
               className="h-12 px-4 rounded-xl text-base outline-none transition-all duration-200"
               style={{
-                background: 'var(--color-surface-3)',
-                border: '1px solid var(--color-surface-border)',
+                background: 'var(--color-board-3)',
+                border: '1px solid var(--color-board-line)',
                 color: '#EDEBE8',
               }}
-              onFocus={(e) => { e.target.style.borderColor = 'var(--color-sand)'; }}
-              onBlur={(e) => { e.target.style.borderColor = 'var(--color-surface-border)'; }}
+              onFocus={(e) => { e.target.style.borderColor = 'var(--color-signal)'; }}
+              onBlur={(e) => { e.target.style.borderColor = 'var(--color-board-line)'; }}
             />
             <p className="text-xs" style={{ color: 'rgba(237,235,232,0.3)' }}>
               Formato internacional recomendado. Los viajeros te contactan directo acá.
@@ -169,7 +169,7 @@ export default function CrearPerfilPage() {
               className="text-sm font-semibold"
               style={{ color: 'rgba(237,235,232,0.7)' }}
             >
-              Descripción de tu negocio <span style={{ color: 'var(--color-sand)' }}>*</span>
+              Descripción de tu negocio <span style={{ color: 'var(--color-signal)' }}>*</span>
             </label>
             <textarea
               id="bio"
@@ -180,12 +180,12 @@ export default function CrearPerfilPage() {
               required
               className="px-4 py-3 rounded-xl text-base outline-none transition-all duration-200 resize-none"
               style={{
-                background: 'var(--color-surface-3)',
-                border: '1px solid var(--color-surface-border)',
+                background: 'var(--color-board-3)',
+                border: '1px solid var(--color-board-line)',
                 color: '#EDEBE8',
               }}
-              onFocus={(e) => { e.target.style.borderColor = 'var(--color-sand)'; }}
-              onBlur={(e) => { e.target.style.borderColor = 'var(--color-surface-border)'; }}
+              onFocus={(e) => { e.target.style.borderColor = 'var(--color-signal)'; }}
+              onBlur={(e) => { e.target.style.borderColor = 'var(--color-board-line)'; }}
             />
           </div>
 
@@ -196,7 +196,7 @@ export default function CrearPerfilPage() {
               className="text-sm font-semibold"
               style={{ color: 'rgba(237,235,232,0.7)' }}
             >
-              Destino principal <span style={{ color: 'var(--color-sand)' }}>*</span>
+              Destino principal <span style={{ color: 'var(--color-signal)' }}>*</span>
             </label>
             <div className="grid grid-cols-2 gap-3">
               {DESTINOS.map((destino) => (
@@ -208,12 +208,12 @@ export default function CrearPerfilPage() {
                   style={{
                     background: formData.destinationSlug === destino.slug
                       ? 'rgba(196,149,106,0.15)'
-                      : 'var(--color-surface-3)',
+                      : 'var(--color-board-3)',
                     border: `1px solid ${formData.destinationSlug === destino.slug
-                      ? 'var(--color-sand)'
-                      : 'var(--color-surface-border)'}`,
+                      ? 'var(--color-signal)'
+                      : 'var(--color-board-line)'}`,
                     color: formData.destinationSlug === destino.slug
-                      ? 'var(--color-sand)'
+                      ? 'var(--color-signal)'
                       : 'rgba(237,235,232,0.5)',
                   }}
                 >
@@ -236,14 +236,14 @@ export default function CrearPerfilPage() {
           {/* Submit */}
           <div
             className="pt-4"
-            style={{ borderTop: '1px solid var(--color-surface-border)' }}
+            style={{ borderTop: '1px solid var(--color-board-line)' }}
           >
             <button
               type="submit"
               disabled={loading}
               className="cursor-pointer w-full py-4 rounded-full text-base font-semibold tracking-wide transition-all duration-300 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
               style={{
-                background: 'var(--color-sand)',
+                background: 'var(--color-signal)',
                 color: '#1A1A1A',
               }}
             >

@@ -66,16 +66,16 @@ export function HeroSection() {
           <motion.div {...fadeUp(0)} className="flex items-center gap-3 mb-10">
             <div
               className="relative flex h-2 w-2 rounded-full"
-              style={{ background: 'var(--color-turquoise-muted)' }}
+              style={{ background: 'var(--color-signal)' }}
             >
               <span
                 className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                style={{ background: 'var(--color-turquoise-muted)' }}
+                style={{ background: 'var(--color-signal)' }}
               />
             </div>
             <span
               className="text-xs font-mono tracking-[0.2em] uppercase"
-              style={{ color: 'var(--color-turquoise-muted)' }}
+              style={{ color: 'var(--color-signal)' }}
             >
               {heroData.socialProof}
             </span>
@@ -107,7 +107,7 @@ export function HeroSection() {
                       ease: [0.16, 1, 0.3, 1] as MotionTransition['ease'],
                     }}
                     className="inline-block italic"
-                    style={{ color: 'var(--color-sand)' }}
+                    style={{ color: 'var(--color-signal)' }}
                   >
                     {VERBOS[index]}
                   </motion.span>
@@ -122,7 +122,7 @@ export function HeroSection() {
           <motion.p
             {...fadeUp(0.2)}
             className="text-base leading-relaxed max-w-md mb-10"
-            style={{ color: 'var(--color-ink-light)' }}
+            style={{ color: 'var(--color-ink-soft)' }}
           >
             {heroData.subheadline}
           </motion.p>
@@ -133,7 +133,7 @@ export function HeroSection() {
               <button
                 className="cursor-pointer px-8 py-4 rounded-lg text-sm font-semibold tracking-wide transition-all duration-300 hover:opacity-90 hover:scale-[1.03]"
                 style={{
-                  background: 'var(--color-sand)',
+                  background: 'var(--color-signal)',
                   color: 'var(--color-cream)',
                 }}
               >
@@ -143,7 +143,7 @@ export function HeroSection() {
             <a
               href="#como-funciona"
               className="flex items-center gap-2 px-2 py-4 text-sm font-medium transition-all duration-300 hover:gap-4"
-              style={{ color: 'var(--color-ink-light)' }}
+              style={{ color: 'var(--color-ink-soft)' }}
             >
               <span>{heroData.ctaSecondary}</span>
               <motion.span
@@ -175,7 +175,7 @@ export function HeroSection() {
                 </span>
                 <span
                   className="text-xs uppercase tracking-widest font-mono"
-                  style={{ color: 'var(--color-ink-light)' }}
+                  style={{ color: 'var(--color-ink-soft)' }}
                 >
                   {stat.label}
                 </span>
@@ -221,7 +221,7 @@ export function HeroSection() {
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           className="w-px h-12"
           style={{
-            background: 'linear-gradient(to bottom, var(--color-ink-light), transparent)',
+            background: 'linear-gradient(to bottom, var(--color-ink-soft), transparent)',
             opacity: 0.6,
           }}
         />

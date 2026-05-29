@@ -9,14 +9,14 @@ const estadoConfig = {
   disponible: {
     label: 'Disponible ahora',
     dotClass: 'animate-pulse',
-    dotColor: 'var(--color-turquoise-muted)',
+    dotColor: 'var(--color-signal)',
     badgeBorder: 'rgba(0,168,150,0.25)',
     badgeBg: 'rgba(0,168,150,0.06)',
-    badgeText: 'var(--color-turquoise-muted)',
+    badgeText: 'var(--color-signal)',
     cardBorder: 'rgba(0,168,150,0.2)',
     cardBg: 'var(--color-cream)',
-    checkColor: 'var(--color-turquoise-muted)',
-    textColor: 'var(--color-ink-light)',
+    checkColor: 'var(--color-signal)',
+    textColor: 'var(--color-ink-soft)',
     scale: true,
   },
   proximo: {
@@ -25,7 +25,7 @@ const estadoConfig = {
     dotColor: 'rgba(26,26,26,0.2)',
     badgeBorder: 'rgba(26,26,26,0.1)',
     badgeBg: 'transparent',
-    badgeText: 'var(--color-ink-light)',
+    badgeText: 'var(--color-ink-soft)',
     cardBorder: 'rgba(26,26,26,0.08)',
     cardBg: 'var(--color-cream)',
     checkColor: 'rgba(26,26,26,0.2)',
@@ -77,7 +77,7 @@ export function RoadmapSection() {
         >
           <span
             className="text-xs font-mono tracking-[0.2em] uppercase"
-            style={{ color: 'var(--color-ink-light)' }}
+            style={{ color: 'var(--color-ink-soft)' }}
           >
             Roadmap
           </span>
@@ -102,7 +102,7 @@ export function RoadmapSection() {
             ease: [0.16, 1, 0.3, 1] as MotionTransition['ease'],
           }}
           className="text-base leading-relaxed max-w-xl mb-20"
-          style={{ color: 'var(--color-ink-light)' }}
+          style={{ color: 'var(--color-ink-soft)' }}
         >
           {roadmapData.subheadline}
         </motion.p>
@@ -156,7 +156,7 @@ export function RoadmapSection() {
                 </h3>
                 <p
                   className="text-sm leading-relaxed mb-8"
-                  style={{ color: 'var(--color-ink-light)' }}
+                  style={{ color: 'var(--color-ink-soft)' }}
                 >
                   {fase.descripcion}
                 </p>

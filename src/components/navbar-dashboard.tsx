@@ -22,7 +22,7 @@ export function NavbarDashboard({ userName }: { userName?: string | null }) {
         style={{
           background: 'rgba(26,26,26,0.95)',
           backdropFilter: 'blur(12px)',
-          borderBottom: '1px solid var(--color-surface-border)',
+          borderBottom: '1px solid var(--color-board-line)',
         }}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12 h-16 flex items-center justify-between gap-8">
@@ -57,7 +57,7 @@ export function NavbarDashboard({ userName }: { userName?: string | null }) {
                     <motion.div
                       layoutId="nav-indicator"
                       className="absolute -bottom-4.5 inset-x-0 h-px"
-                      style={{ background: 'var(--color-sand)' }}
+                      style={{ background: 'var(--color-signal)' }}
                     />
                   )}
                 </Link>
@@ -79,7 +79,7 @@ export function NavbarDashboard({ userName }: { userName?: string | null }) {
               onClick={() => signOut({ callbackUrl: '/login' })}
               className="cursor-pointer text-sm px-4 py-2 rounded-full transition-all duration-200 hover:opacity-80"
               style={{
-                border: '1px solid var(--color-surface-border-hover)',
+                border: '1px solid var(--color-board-line)',
                 color: 'rgba(237,235,232,0.6)',
               }}
             >
@@ -127,7 +127,7 @@ export function NavbarDashboard({ userName }: { userName?: string | null }) {
             style={{
               background: 'rgba(26,26,26,0.98)',
               backdropFilter: 'blur(16px)',
-              borderBottom: '1px solid var(--color-surface-border)',
+              borderBottom: '1px solid var(--color-board-line)',
             }}
           >
             {LINKS.map((link, i) => (
@@ -142,7 +142,7 @@ export function NavbarDashboard({ userName }: { userName?: string | null }) {
                   className="text-2xl font-bold"
                   style={{
                     fontFamily: 'var(--font-display)',
-                    color: pathname === link.href ? 'var(--color-sand)' : '#EDEBE8',
+                    color: pathname === link.href ? 'var(--color-signal)' : '#EDEBE8',
                   }}
                   onClick={() => setMenuOpen(false)}
                 >
@@ -156,7 +156,7 @@ export function NavbarDashboard({ userName }: { userName?: string | null }) {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
               className="pt-4 flex flex-col gap-4"
-              style={{ borderTop: '1px solid var(--color-surface-border)' }}
+              style={{ borderTop: '1px solid var(--color-board-line)' }}
             >
               {userName && (
                 <span

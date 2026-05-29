@@ -4,7 +4,7 @@ export default function NotFound() {
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-center px-6 text-center"
-      style={{ background: 'var(--color-dark-900)' }}
+      style={{ background: 'var(--color-board)' }}
     >
       {/* Número grande de fondo */}
       <div

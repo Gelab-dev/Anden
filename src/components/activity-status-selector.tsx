@@ -118,8 +118,8 @@ export function ActivityStatusSelector({
       <div
         className="w-full max-w-sm rounded-2xl p-6 shadow-2xl"
         style={{
-          background: 'var(--color-surface-2)',
-          border: '1px solid var(--color-surface-border)',
+          background: 'var(--color-board-2)',
+          border: '1px solid var(--color-board-line)',
         }}
       >
         {/* Header */}
@@ -197,12 +197,12 @@ export function ActivityStatusSelector({
             placeholder="Ej: Vuelve el jueves, suspendido por lluvia..."
             className="w-full h-10 px-3 rounded-xl text-sm outline-none"
             style={{
-              background: 'var(--color-surface-3)',
-              border: '1px solid var(--color-surface-border)',
+              background: 'var(--color-board-3)',
+              border: '1px solid var(--color-board-line)',
               color: '#EDEBE8',
             }}
-            onFocus={(e) => { e.target.style.borderColor = 'var(--color-sand)'; }}
-            onBlur={(e) => { e.target.style.borderColor = 'var(--color-surface-border)'; }}
+            onFocus={(e) => { e.target.style.borderColor = 'var(--color-signal)'; }}
+            onBlur={(e) => { e.target.style.borderColor = 'var(--color-board-line)'; }}
           />
         </div>
 
@@ -216,7 +216,7 @@ export function ActivityStatusSelector({
             onClick={handleSave}
             disabled={loading}
             className="cursor-pointer flex-1 py-3 rounded-full text-sm font-semibold transition-all duration-200 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{ background: 'var(--color-sand)', color: '#1A1A1A' }}
+            style={{ background: 'var(--color-signal)', color: '#1A1A1A' }}
           >
             {loading ? 'Guardando...' : 'Guardar cambio'}
           </button>
@@ -224,7 +224,7 @@ export function ActivityStatusSelector({
             onClick={handleCancel}
             className="cursor-pointer px-5 py-3 rounded-full text-sm transition-all duration-200 hover:opacity-70"
             style={{
-              border: '1px solid var(--color-surface-border)',
+              border: '1px solid var(--color-board-line)',
               color: 'rgba(237,235,232,0.4)',
             }}
           >

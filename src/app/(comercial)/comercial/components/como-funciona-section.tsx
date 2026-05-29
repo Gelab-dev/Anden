@@ -14,7 +14,7 @@ export function ComoFuncionaSection() {
       id="como-funciona"
       ref={ref}
       className="relative py-40 px-6 md:px-12 overflow-hidden"
-      style={{ background: 'var(--color-cream-dark)' }}
+      style={{ background: 'var(--color-cream-2)' }}
     >
       {/* Borde superior */}
       <div
@@ -33,7 +33,7 @@ export function ComoFuncionaSection() {
         >
           <span
             className="text-xs font-mono tracking-[0.2em] uppercase"
-            style={{ color: 'var(--color-ink-light)' }}
+            style={{ color: 'var(--color-ink-soft)' }}
           >
             Cómo funciona
           </span>
@@ -49,7 +49,7 @@ export function ComoFuncionaSection() {
           </h2>
           <p
             className="mt-6 text-base leading-relaxed max-w-sm"
-            style={{ color: 'var(--color-ink-light)' }}
+            style={{ color: 'var(--color-ink-soft)' }}
           >
             En menos de 5 minutos tu negocio aparece en el feed de tu ciudad.
           </p>
@@ -89,7 +89,7 @@ export function ComoFuncionaSection() {
                     className="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300"
                     style={{
                       border: '1px solid rgba(26,26,26,0.15)',
-                      background: 'var(--color-cream-dark)',
+                      background: 'var(--color-cream-2)',
                     }}
                   >
                     <span
@@ -102,7 +102,7 @@ export function ComoFuncionaSection() {
                   {/* Dot sand al hover */}
                   <div
                     className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{ border: '1px solid var(--color-sand)' }}
+                    style={{ border: '1px solid var(--color-signal)' }}
                   />
                 </div>
 
@@ -116,7 +116,7 @@ export function ComoFuncionaSection() {
                   </h3>
                   <p
                     className="text-sm leading-relaxed"
-                    style={{ color: 'var(--color-ink-light)' }}
+                    style={{ color: 'var(--color-ink-soft)' }}
                   >
                     {paso.descripcion}
                   </p>

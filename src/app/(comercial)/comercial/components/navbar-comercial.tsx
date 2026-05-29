@@ -60,7 +60,7 @@ export function NavbarComercial() {
             <a  key={link.href}
                 href={link.href}
                 className="text-sm transition-opacity hover:opacity-60"
-                style={{ color: 'var(--color-ink-light)' }}
+                style={{ color: 'var(--color-ink-soft)' }}
             >
             {link.label}
             </a>
@@ -73,7 +73,7 @@ export function NavbarComercial() {
               <button
                 className="cursor-pointer px-5 py-2.5 rounded-lg text-sm font-semibold tracking-wide transition-all duration-300 hover:opacity-90 hover:scale-[1.02]"
                 style={{
-                  background: 'var(--color-sand)',
+                  background: 'var(--color-signal)',
                   color: 'var(--color-cream)',
                 }}
               >
@@ -154,7 +154,7 @@ export function NavbarComercial() {
                 <button
                   className="w-full py-4 rounded-lg text-base font-semibold tracking-wide"
                   style={{
-                    background: 'var(--color-sand)',
+                    background: 'var(--color-signal)',
                     color: 'var(--color-cream)',
                   }}
                 >
