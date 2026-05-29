@@ -60,21 +60,18 @@ function useAnimatedCounter(target: number, duration = 700) {
 
 // ─── Hook: hora local actualizada cada minuto ─────────────────────────────────
 
+const ART_FMT = new Intl.DateTimeFormat('es-AR', {
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false,
+  timeZone: 'America/Argentina/Buenos_Aires',
+})
+
 function useLocalTime() {
-  const [time, setTime] = useState(() =>
-    new Intl.DateTimeFormat('es-AR', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    }).format(new Date())
-  )
+  const [time, setTime] = useState(() => ART_FMT.format(new Date()))
 
   useEffect(() => {
-    const fmt = new Intl.DateTimeFormat('es-AR', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    })
+    const fmt = ART_FMT
 
     // Sincronizar con el próximo minuto exacto
     const msToNextMinute = (60 - new Date().getSeconds()) * 1000
