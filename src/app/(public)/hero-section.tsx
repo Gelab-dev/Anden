@@ -178,7 +178,7 @@ export function HeroSection({
           className="text-sm text-white/40 italic mb-3"
           variants={fadeUp}
         >
-          Son las {time} en {destinationName}.
+          Son las <span className="tabular">{time}</span> en {destinationName}.
         </motion.p>
 
         {/* Título */}

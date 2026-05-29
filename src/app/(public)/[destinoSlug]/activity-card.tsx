@@ -225,7 +225,7 @@ export function ActivityCard({ activity, destinoSlug }: Props) {
         {/* Footer: fecha + CTA */}
         <div className="border-t border-white/6 pt-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-2 mt-auto">
           {/* Fecha / frecuencia */}
-          <span className="text-[11px] text-white/30 shrink-0">
+          <span className="text-[11px] text-white/30 shrink-0 tabular">
             {dateStr ?? (activity.isRecurring ? 'Recurrente' : null)}
           </span>
 

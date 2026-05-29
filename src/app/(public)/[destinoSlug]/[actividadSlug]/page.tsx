@@ -164,11 +164,12 @@ export default async function ActividadPage({ params }: PageProps) {
       text: actividad.endDate
         ? `${formatDateShort(actividad.startDate)} — ${formatDateShort(actividad.endDate)}`
         : formatDateShort(actividad.startDate),
+      mono: true,
     },
-    scheduleData?.texto && { icon: <IconClock />, text: scheduleData.texto },
-    actividad.maxCapacity && { icon: <IconUsers />, text: `${actividad.maxCapacity} personas` },
+    scheduleData?.texto && { icon: <IconClock />, text: scheduleData.texto, mono: true },
+    actividad.maxCapacity && { icon: <IconUsers />, text: `${actividad.maxCapacity} personas`, mono: true },
     { icon: <IconRepeat />, text: actividad.isRecurring ? 'Actividad recurrente' : 'Evento con fecha' },
-  ].filter(Boolean) as { icon: React.ReactNode; text: string }[];
+  ].filter(Boolean) as { icon: React.ReactNode; text: string; mono?: boolean }[];
 
   return (
     <div className="min-h-screen" style={{ background: '#0d1b2a' }}>
@@ -248,7 +249,7 @@ export default async function ActividadPage({ params }: PageProps) {
               <span>{destino.name}</span>
               {actividad.provider && <><span>·</span><span>{actividad.provider.name}</span></>}
               <span>·</span>
-              <span className="font-semibold" style={{ color: 'var(--color-signal)' }}>{price}</span>
+              <span className="font-semibold tabular" style={{ color: 'var(--color-signal)' }}>{price}</span>
             </div>
           </div>
         </div>
@@ -295,7 +296,7 @@ export default async function ActividadPage({ params }: PageProps) {
                       }}
                     >
                       {pill.icon}
-                      {pill.text}
+                      <span className={pill.mono ? 'tabular' : ''}>{pill.text}</span>
                     </div>
                   ))}
                 </div>
@@ -396,8 +397,8 @@ export default async function ActividadPage({ params }: PageProps) {
                     Precio por persona
                   </p>
                   <p
-                    className="text-3xl font-black tracking-[-0.03em]"
-                    style={{ fontFamily: 'var(--font-display)', color: '#F5F0E8' }}
+                    className="text-3xl font-black tracking-[-0.03em] tabular"
+                    style={{ color: '#F5F0E8' }}
                   >
                     {price}
                   </p>
@@ -430,7 +431,7 @@ export default async function ActividadPage({ params }: PageProps) {
                         <p className="text-xs tracking-[0.06em] uppercase mb-1" style={{ color: 'rgba(255,255,255,0.28)' }}>
                           Fecha
                         </p>
-                        <p className="text-sm capitalize" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                        <p className="text-sm capitalize tabular" style={{ color: 'rgba(255,255,255,0.7)' }}>
                           {formatDate(actividad.startDate)}
                         </p>
                       </div>
@@ -440,7 +441,7 @@ export default async function ActividadPage({ params }: PageProps) {
                         <p className="text-xs tracking-[0.06em] uppercase mb-1" style={{ color: 'rgba(255,255,255,0.28)' }}>
                           Horarios
                         </p>
-                        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                        <p className="text-sm tabular" style={{ color: 'rgba(255,255,255,0.7)' }}>
                           {scheduleData.texto}
                         </p>
                       </div>
