@@ -238,9 +238,9 @@ export function ActivityCard({ activity, destinoSlug }: Props) {
               className={[
                 'text-xs font-medium shrink-0 cursor-pointer',
                 'px-3 py-1.5 rounded-full',
-                'text-[#00D9C0] border border-[#00D9C0]/30 bg-[#00D9C0]/7',
+                'text-[var(--color-signal)] border border-[var(--color-signal)]/30 bg-[var(--color-signal)]/7',
                 'transition-all duration-180 ease-out',
-                'hover:bg-[#00D9C0] hover:text-[#0D1B2A] hover:border-[#00D9C0] hover:scale-[1.04]',
+                'hover:bg-[var(--color-signal)] hover:text-[var(--color-board)] hover:border-[var(--color-signal)] hover:scale-[1.04]',
               ].join(' ')}
             >
               Contactar →

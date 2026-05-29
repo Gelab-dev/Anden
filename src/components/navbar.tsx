@@ -45,7 +45,7 @@ export function Navbar() {
             className="font-black text-xl tracking-tight transition-opacity hover:opacity-70 shrink-0"
             style={{
               fontFamily: 'var(--font-playfair)',
-              color: '#00D9C0',
+              color: 'var(--color-signal)',
             }}
           >
             Andén
@@ -69,7 +69,7 @@ export function Navbar() {
                   color: '#EDEBE8',
                 }}
                 onFocus={(e) => {
-                  e.target.style.borderColor = 'rgba(0,217,192,0.3)';
+                  e.target.style.borderColor = 'rgba(255,159,28,0.3)';
                   e.target.style.background = 'rgba(255,255,255,0.08)';
                 }}
                 onBlur={(e) => {
@@ -122,9 +122,9 @@ export function Navbar() {
                 <button
                   className="cursor-pointer text-sm px-4 py-2 rounded-full transition-all duration-200 hover:opacity-90 whitespace-nowrap"
                   style={{
-                    background: 'rgba(0,217,192,0.08)',
-                    border: '1px solid rgba(0,217,192,0.2)',
-                    color: '#00D9C0',
+                    background: 'rgba(255,159,28,0.08)',
+                    border: '1px solid rgba(255,159,28,0.2)',
+                    color: 'var(--color-signal)',
                   }}
                 >
                   Publicá tus actividades →
@@ -229,7 +229,7 @@ export function Navbar() {
                 <Link
                   href="/comercial"
                   className="text-lg font-semibold"
-                  style={{ color: '#00D9C0' }}
+                  style={{ color: 'var(--color-signal)' }}
                   onClick={() => setMenuOpen(false)}
                 >
                   Publicá tus actividades →

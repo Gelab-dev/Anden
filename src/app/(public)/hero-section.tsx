@@ -168,10 +168,10 @@ export function HeroSection({
           variants={fadeIn}
         >
           <span className="relative flex size-2">
-            <span className="animate-ping absolute inline-flex size-full rounded-full bg-[#00D9C0] opacity-60" />
-            <span className="relative inline-flex size-2 rounded-full bg-[#00D9C0]" />
+            <span className="animate-ping absolute inline-flex size-full rounded-full bg-[var(--color-signal)] opacity-60" />
+            <span className="relative inline-flex size-2 rounded-full bg-[var(--color-signal)]" />
           </span>
-          <span className="text-[11px] font-medium tracking-widestuppercase text-[#00D9C0]">
+          <span className="text-[11px] font-medium tracking-widestuppercase text-[var(--color-signal)]">
             {province} · En vivo
           </span>
         </motion.div>
@@ -197,7 +197,7 @@ export function HeroSection({
             {destinationName},
           </span>
           <span
-            className="block font-black tracking-[-0.03em] text-[#00D9C0] leading-[1.02] italic"
+            className="block font-black tracking-[-0.03em] text-[var(--color-signal)] leading-[1.02] italic"
             style={{
               fontFamily: 'var(--font-playfair)',
               fontSize: 'clamp(2.6rem, 5.5vw, 4rem)',
@@ -221,7 +221,7 @@ export function HeroSection({
           className="flex flex-wrap items-center gap-3"
           variants={fadeUp}
         >
-          <div className="inline-flex items-center gap-2 bg-[#00D9C0]/8 border border-[#00D9C0]/20 rounded-full px-4 py-2 text-sm text-white/70">
+          <div className="inline-flex items-center gap-2 bg-[var(--color-signal)]/8 border border-[var(--color-signal)]/20 rounded-full px-4 py-2 text-sm text-white/70">
             <span className="size-[5px] rounded-full bg-emerald-400 shrink-0" />
             <span>
               <strong className="text-white font-semibold">{animatedCount}</strong>
@@ -234,7 +234,7 @@ export function HeroSection({
 
           <Link
             href={`/${destinationSlug}`}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-[#00D9C0] hover:text-white transition-colors duration-150 cursor-pointer"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-signal)] hover:text-white transition-colors duration-150 cursor-pointer"
           >
             Ver qué está pasando
             <span aria-hidden>→</span>

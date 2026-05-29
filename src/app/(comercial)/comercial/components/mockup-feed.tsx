@@ -287,9 +287,9 @@ function ActivityCard({
           <div
             className="text-[11px] font-medium px-3 py-1.5 rounded-full"
             style={{
-              color: '#00D9C0',
-              background: 'rgba(0,217,192,0.07)',
-              border: '0.5px solid rgba(0,217,192,0.3)',
+              color: 'var(--color-signal)',
+              background: 'rgba(255,159,28,0.07)',
+              border: '0.5px solid rgba(255,159,28,0.3)',
             }}
           >
             Contactar →

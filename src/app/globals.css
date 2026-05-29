@@ -1,106 +1,58 @@
 @import "tailwindcss";
 
+/* ════════════════════════════════════════════════════════════════════
+   Andén — tokens de marca · v2.0 "tablero de salidas"
+   Reemplaza el bloque @theme anterior de src/app/globals.css
+   ════════════════════════════════════════════════════════════════════ */
+
 @theme {
-  /* ============================================
-     ANDÉN — Design Tokens
-     ============================================ */
+  /* ───────────── Tipografía ─────────────
+     Cargar con next/font/google en layout root y mapear a estas vars.
+     Display: Bricolage Grotesque · UI: DM Sans · Datos: DM Mono */
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans:    var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    var(--font-dm-mono), ui-monospace, "SF Mono", monospace;
 
-  --font-playfair: 'Playfair Display', serif;
+  /* ───────────── El tablero — oscuros (feed + dashboard) ───────────── */
+  --color-board:      #17140F;   /* fondo principal: el tablero */
+  --color-board-2:    #211C16;   /* surface elevada, cards, navbar */
+  --color-board-3:    #2C261D;   /* surface 2, inputs, hover de filas */
+  --color-board-line: rgba(244, 236, 220, 0.08); /* bordes hairline */
 
-  /* Colores principales */
-  --color-turquoise: #00d9c0;
-  --color-turquoise-dark: #00b39f;
-  --color-turquoise-light: #33e5d1;
+  /* ───────────── El boleto — claros (landing /comercial) ───────────── */
+  --color-cream:    #F4ECDC;     /* fondo landing: papel cálido */
+  --color-cream-2:  #EAE0CC;     /* secciones alternadas */
+  --color-ink:      #1E1A14;     /* texto principal sobre crema */
+  --color-ink-soft: #6E6353;     /* texto secundario sobre crema */
 
-  /* Grises oscuros (modo oscuro por defecto) */
-  --color-dark-900: #0d1b2a;
-  --color-dark-800: #1b263b;
-  --color-dark-700: #2d3e50;
-  --color-dark-600: #415a77;
+  /* ───────────── La señal — acento (las tres superficies) ───────────── */
+  --color-signal:        #FF9F1C; /* acento primario, CTAs, "en vivo" */
+  --color-signal-bright: #FFC152; /* hover, foco */
+  --color-signal-deep:   #B86A0A; /* texto-acento sobre crema, pressed (AA) */
 
-  /* Estados de actividades */
-  --color-status-operating: #10b981;
-  --color-status-limited: #f59e0b;
-  --color-status-closed: #ef4444;
-  --color-status-sold-out: #8b5cf6;
+  /* ───────────── Las señales del tablero — estados de actividad ─────────────
+     Mapean 1:1 con ActivityStatus. Acompañar SIEMPRE de etiqueta de texto. */
+  --color-activo:     #1FA866;   /* OPERATING / SCHEDULED — verde */
+  --color-demorado:   #F2C94C;   /* LIMITED / demorado — amarillo */
+  --color-completo:   #E5484D;   /* SOLD_OUT / CLOSED — rojo */
+  --color-suspendido: #8A8378;   /* suspendido — gris cálido */
 
-  /* Tipografía */
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-
-  /* Animaciones */
-  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
-  --animate-float: float 3s ease-in-out infinite;
-  --animate-shimmer: shimmer 2s linear infinite;
-
-  /* Tokens modo claro — landing comercial */
-  --color-cream: #F5F0E8;
-  --color-cream-dark: #EDE7D9;
-  --color-ink: #1A1A1A;
-  --color-ink-light: #6B6560;
-  --color-sand: #C4956A;
-  --color-sand-light: #F0E4D4;
-  --color-turquoise-muted: #00A896;
-
-  /* Tokens dashboard — oscuro cálido */
-  --color-surface: #1A1A1A;
-  --color-surface-2: #222220;
-  --color-surface-3: #2A2A27;
-  --color-surface-border: rgba(255,255,255,0.07);
-  --color-surface-border-hover: rgba(255,255,255,0.12);
+  /* ───────────── Externos ───────────── */
+  --color-whatsapp: #25D366;     /* botón de contacto WhatsApp */
 }
 
+/* ───────────── Base ─────────────
+   El feed y el dashboard viven en el tablero; la landing pinta su propio
+   fondo crema en su layout (route group (comercial)). */
+@layer base {
+  :root { color-scheme: dark; }
 
-html {
-  scroll-behavior: smooth;
-}
+  body {
+    background-color: var(--color-board);
+    color: var(--color-cream);
+    font-family: var(--font-sans);
+  }
 
-/* Animaciones personalizadas */
-@keyframes pulse-glow {
-  0%, 100% {
-    opacity: 1;
-    box-shadow: 0 0 20px rgba(0, 217, 192, 0.3);
-  }
-  50% {
-    opacity: 0.8;
-    box-shadow: 0 0 40px rgba(0, 217, 192, 0.6);
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
-  }
-  100% {
-    background-position: 1000px 0;
-  }
-}
-
-/* Base styles */
-body {
-  background: var(--color-dark-900);
-  color: #ededed;
-  font-family: var(--font-sans), system-ui, sans-serif;
-}
-
-/* Utilitarios de accesibilidad */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
+  /* Datos siempre en mono y con cifras tabulares (alinean como un tablero) */
+  .tabular { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 }

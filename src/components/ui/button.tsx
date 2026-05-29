@@ -8,29 +8,29 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Turquesa sólido (CTA principal)
+        // Signal sólido (CTA principal)
         primary:
-          'bg-[var(--color-turquoise)] text-[var(--color-dark-900)] hover:bg-[var(--color-turquoise-dark)] focus-visible:ring-[var(--color-turquoise)]',
-        
-        // Outline turquesa (secundario)
+          'bg-[var(--color-signal)] text-[var(--color-board)] hover:bg-[var(--color-signal-bright)] focus-visible:ring-[var(--color-signal)]',
+
+        // Outline signal (secundario)
         secondary:
-          'border-2 border-[var(--color-turquoise)] text-[var(--color-turquoise)] hover:bg-[var(--color-turquoise)] hover:text-[var(--color-dark-900)] focus-visible:ring-[var(--color-turquoise)]',
-        
+          'border-2 border-[var(--color-signal)] text-[var(--color-signal)] hover:bg-[var(--color-signal)] hover:text-[var(--color-board)] focus-visible:ring-[var(--color-signal)]',
+
         // Transparente con hover
         ghost:
-          'text-gray-300 hover:bg-[var(--color-dark-700)] hover:text-white focus-visible:ring-[var(--color-dark-600)]',
-        
+          'text-gray-300 hover:bg-[var(--color-board-3)] hover:text-white focus-visible:ring-[var(--color-board-2)]',
+
         // Oscuro sólido
         dark:
-          'bg-[var(--color-dark-700)] text-white hover:bg-[var(--color-dark-600)] focus-visible:ring-[var(--color-dark-600)]',
-        
+          'bg-[var(--color-board-3)] text-white hover:bg-[var(--color-board-2)] focus-visible:ring-[var(--color-board-2)]',
+
         // Outline gris
         outline:
-          'border-2 border-[var(--color-dark-600)] text-gray-300 hover:bg-[var(--color-dark-700)] hover:text-white focus-visible:ring-[var(--color-dark-600)]',
-        
+          'border-2 border-[var(--color-board-2)] text-gray-300 hover:bg-[var(--color-board-3)] hover:text-white focus-visible:ring-[var(--color-board-2)]',
+
         // Rojo peligro (delete, cancel)
         danger:
-          'bg-[var(--color-status-closed)] text-white hover:bg-red-600 focus-visible:ring-red-500',
+          'bg-[var(--color-completo)] text-white hover:bg-red-600 focus-visible:ring-red-500',
       },
       size: {
         sm: 'h-9 px-3 text-sm',

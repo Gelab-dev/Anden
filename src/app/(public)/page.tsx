@@ -132,7 +132,7 @@ export default async function HomePage() {
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
             La vida real de cada<br />
-            <em className="italic text-[#00D9C0]">destino argentino.</em>
+            <em className="italic text-[var(--color-signal)]">destino argentino.</em>
           </h1>
           <p className="text-white/40 max-w-md mx-auto">
             Estamos incorporando los primeros destinos. Pronto vas a poder descubrir
@@ -268,7 +268,7 @@ function LeadCaptureForm() {
       />
       <button
         type="submit"
-        className="bg-[#00D9C0] text-dark-900 text-sm font-semibold px-5 py-2 rounded-full hover:bg-[#00c4ad] transition-colors duration-150 cursor-pointer shrink-0"
+        className="bg-[var(--color-signal)] text-[var(--color-board)] text-sm font-semibold px-5 py-2 rounded-full hover:bg-[var(--color-signal-bright)] transition-colors duration-150 cursor-pointer shrink-0"
       >
         Avisame →
       </button>

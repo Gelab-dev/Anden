@@ -21,7 +21,7 @@ export default function NotFound() {
       <div className="relative z-10">
         <p
           className="text-xs font-mono tracking-[0.2em] uppercase mb-6"
-          style={{ color: '#00D9C0' }}
+          style={{ color: 'var(--color-signal)' }}
         >
           Página no encontrada
         </p>
@@ -48,7 +48,7 @@ export default function NotFound() {
           <Link href="/">
             <button
               className="cursor-pointer px-8 py-4 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:opacity-90"
-              style={{ background: '#00D9C0', color: '#0D1B2A' }}
+              style={{ background: 'var(--color-signal)', color: 'var(--color-board)' }}
             >
               Ir al inicio
             </button>
