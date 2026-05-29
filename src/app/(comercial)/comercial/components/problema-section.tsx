@@ -1,13 +1,14 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
 import type { Transition as MotionTransition } from 'framer-motion';
 import { problemaData } from '../data/landing.data';
 
 export function ProblemaSection() {
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: '-80px' });
+  const rm = useReducedMotion();
 
   return (
     <section
@@ -38,8 +39,8 @@ export function ProblemaSection() {
 
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          initial={rm ? false : { opacity: 0, y: 24 }}
+          animate={rm || isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as MotionTransition['ease'] }}
           className="mb-20"
         >
@@ -66,8 +67,8 @@ export function ProblemaSection() {
           {problemaData.items.map((item, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, x: -24 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              initial={rm ? false : { opacity: 0, x: -24 }}
+              animate={rm || isInView ? { opacity: 1, x: 0 } : {}}
               transition={{
                 duration: 0.7,
                 delay: index * 0.12,

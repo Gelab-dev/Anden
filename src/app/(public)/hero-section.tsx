@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import type { MotionProps } from 'framer-motion'
 import Link from 'next/link'
 
@@ -20,17 +20,15 @@ type Props = {
 
 const ease = [0.16, 1, 0.3, 1] as MotionProps['transition'] extends { ease?: infer E } ? E : never
 
-const stagger = {
+const staggerFull = {
   hidden: {},
   show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
 }
-
-const fadeUp = {
+const fadeUpFull = {
   hidden: { opacity: 0, y: 18 },
   show: { opacity: 1, y: 0, transition: { duration: 0.7, ease } },
 }
-
-const fadeIn = {
+const fadeInFull = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { duration: 0.6, ease } },
 }
@@ -39,23 +37,24 @@ const fadeIn = {
 
 function useAnimatedCounter(target: number, duration = 700) {
   const [count, setCount] = useState(0)
+  const rm = useReducedMotion()
 
   useEffect(() => {
-    if (target === 0) return
+    if (target === 0 || rm) return
     const startTime = performance.now()
 
     const step = (now: number) => {
       const progress = Math.min((now - startTime) / duration, 1)
-      const eased = 1 - Math.pow(1 - progress, 3) // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3)
       setCount(Math.floor(eased * target))
       if (progress < 1) requestAnimationFrame(step)
       else setCount(target)
     }
 
     requestAnimationFrame(step)
-  }, [target, duration])
+  }, [target, duration, rm])
 
-  return count
+  return rm ? target : count
 }
 
 // ─── Hook: hora local actualizada cada minuto ─────────────────────────────────
@@ -111,6 +110,10 @@ export function HeroSection({
   const time = useLocalTime()
   const animatedCount = useAnimatedCounter(operatingCount, 700)
   const gradient = DEST_GRADIENT[destinationSlug] ?? DEST_GRADIENT.default
+  const rm = useReducedMotion()
+  const stagger = rm ? {} : staggerFull
+  const fadeUp = rm ? {} : fadeUpFull
+  const fadeIn = rm ? {} : fadeInFull
 
   return (
     <section className="relative min-h-[480px] flex items-end overflow-hidden">

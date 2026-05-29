@@ -42,13 +42,13 @@ export function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className="font-black text-xl tracking-tight transition-opacity hover:opacity-70 shrink-0"
+            className="font-black text-2xl tracking-tight transition-opacity hover:opacity-70 shrink-0"
             style={{
               fontFamily: 'var(--font-display)',
               color: 'var(--color-signal)',
             }}
           >
-            Andén
+            Andén<span aria-hidden="true" style={{ color: 'var(--color-signal)', fontSize: '0.6em', verticalAlign: 'super', marginLeft: '1px' }}>•</span>
           </Link>
 
           {/* Buscador desktop */}

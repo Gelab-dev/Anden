@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import type { Transition as MotionTransition } from 'framer-motion';
 import { heroData } from '../data/landing.data';
 import { MockupFeed } from './mockup-feed';
@@ -21,13 +21,15 @@ const VERBOS = ['buscando', 'pensando', 'eligiendo', 'decidiendo'];
 
 export function HeroSection() {
   const [index, setIndex] = useState(0);
+  const rm = useReducedMotion();
 
   useEffect(() => {
+    if (rm) return;
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % VERBOS.length);
     }, 2000);
     return () => clearInterval(interval);
-  }, []);
+  }, [rm]);
 
   return (
     <section

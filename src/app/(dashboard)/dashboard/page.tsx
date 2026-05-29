@@ -259,9 +259,8 @@ export default async function DashboardPage() {
                       }}
                     />
                   <span
-                    className="text-4xl font-black tracking-tight leading-none"
+                    className="text-4xl font-black tracking-tight leading-none tabular"
                     style={{
-                      fontFamily: 'var(--font-display)',
                       color: stat.accent ? 'var(--color-signal)' : '#EDEBE8',
                     }}
                   >

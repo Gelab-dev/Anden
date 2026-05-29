@@ -41,6 +41,14 @@
   --color-whatsapp: #25D366;     /* botón de contacto WhatsApp */
 }
 
+/* ───────────── Accesibilidad — movimiento reducido ─────────────
+   Detiene las animaciones CSS puras cuando el usuario lo prefiere.
+   Las animaciones de Framer Motion se controlan vía MotionConfig
+   (reducedMotion="user") en session-provider.tsx. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-ping { animation: none; }
+}
+
 /* ───────────── Base ─────────────
    El feed y el dashboard viven en el tablero; la landing pinta su propio
    fondo crema en su layout (route group (comercial)). */

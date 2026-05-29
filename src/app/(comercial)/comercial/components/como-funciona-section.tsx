@@ -1,13 +1,14 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
 import type { Transition as MotionTransition } from 'framer-motion';
 import { comoFuncionaData } from '../data/landing.data';
 
 export function ComoFuncionaSection() {
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: '-80px' });
+  const rm = useReducedMotion();
 
   return (
     <section
@@ -26,8 +27,8 @@ export function ComoFuncionaSection() {
 
         {/* Columna izquierda — header fijo */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          initial={rm ? false : { opacity: 0, y: 24 }}
+          animate={rm || isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as MotionTransition['ease'] }}
           className="md:sticky md:top-32"
         >
@@ -59,8 +60,8 @@ export function ComoFuncionaSection() {
         <div className="relative">
           {/* Línea conectora */}
           <motion.div
-            initial={{ scaleY: 0 }}
-            animate={isInView ? { scaleY: 1 } : {}}
+            initial={rm ? false : { scaleY: 0 }}
+            animate={rm || isInView ? { scaleY: 1 } : {}}
             transition={{
               duration: 1.2,
               delay: 0.3,
@@ -74,8 +75,8 @@ export function ComoFuncionaSection() {
             {comoFuncionaData.pasos.map((paso, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, x: 24 }}
-                animate={isInView ? { opacity: 1, x: 0 } : {}}
+                initial={rm ? false : { opacity: 0, x: 24 }}
+                animate={rm || isInView ? { opacity: 1, x: 0 } : {}}
                 transition={{
                   duration: 0.7,
                   delay: 0.2 + index * 0.15,

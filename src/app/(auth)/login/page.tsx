@@ -100,7 +100,7 @@ function LoginForm() {
           className="font-black text-2xl tracking-tight transition-opacity hover:opacity-70"
           style={{ fontFamily: 'var(--font-display)', color: '#EDEBE8' }}
         >
-          Andén
+          Andén<span aria-hidden="true" style={{ color: 'var(--color-signal)', fontSize: '0.6em', verticalAlign: 'super', marginLeft: '1px' }}>•</span>
         </Link>
 
         <div>

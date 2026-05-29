@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
 import type { Transition as MotionTransition } from 'framer-motion';
 import Link from 'next/link';
 import { solucionData } from '../data/landing.data';
@@ -9,6 +9,7 @@ import { solucionData } from '../data/landing.data';
 export function SolucionSection() {
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: '-80px' });
+  const rm = useReducedMotion();
 
   return (
     <section
@@ -21,8 +22,8 @@ export function SolucionSection() {
 
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          initial={rm ? false : { opacity: 0, y: 24 }}
+          animate={rm || isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as MotionTransition['ease'] }}
           className="mb-24 max-w-xl"
         >
@@ -49,8 +50,8 @@ export function SolucionSection() {
           {solucionData.items.map((item, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 32 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              initial={rm ? false : { opacity: 0, y: 32 }}
+              animate={rm || isInView ? { opacity: 1, y: 0 } : {}}
               transition={{
                 duration: 0.7,
                 delay: index * 0.12,
@@ -94,8 +95,8 @@ export function SolucionSection() {
 
         {/* CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          initial={rm ? false : { opacity: 0, y: 24 }}
+          animate={rm || isInView ? { opacity: 1, y: 0 } : {}}
           transition={{
             duration: 0.6,
             delay: 0.5,

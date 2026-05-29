@@ -1,0 +1,8 @@
+<svg width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Andén">
+  <title>Andén</title>
+  <desc>Isotipo: solapa de tablero de salidas con chevron ámbar y borde de andén.</desc>
+  <rect x="8" y="8" width="84" height="84" rx="20" fill="#211C16"/>
+  <line x1="8" y1="50" x2="92" y2="50" stroke="#17140F" stroke-width="2.5"/>
+  <polyline points="32,63 50,40 68,63" fill="none" stroke="#FF9F1C" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="36" y="72" width="28" height="5" rx="2.5" fill="#FF9F1C" opacity="0.55"/>
+</svg>
