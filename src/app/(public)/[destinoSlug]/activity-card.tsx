@@ -210,9 +210,9 @@ export function ActivityCard({ activity, destinoSlug }: Props) {
           </p>
         )}
 
-        {/* Título en Playfair */}
+        {/* Título */}
         <Link href={detailHref} className="block cursor-pointer">
-          <h3 className="font-playfair text-lg font-bold text-cream leading-snug tracking-[-0.02em] mb-2 line-clamp-2">
+          <h3 className="font-display text-lg font-bold text-cream leading-snug tracking-[-0.02em] mb-2 line-clamp-2">
             {activity.title}
           </h3>
         </Link>

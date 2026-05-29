@@ -130,7 +130,7 @@ export default function NuevaActividadPage() {
           </p>
           <h1
             className="text-4xl md:text-5xl font-black tracking-[-0.03em]"
-            style={{ fontFamily: 'var(--font-playfair)', color: '#EDEBE8' }}
+            style={{ fontFamily: 'var(--font-display)', color: '#EDEBE8' }}
           >
             Publicá tu actividad
           </h1>

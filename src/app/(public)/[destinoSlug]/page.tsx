@@ -107,7 +107,7 @@ export default async function DestinoPage({ params }: PageProps) {
           <h1
             className="font-black tracking-[-0.03em] text-white mb-3"
             style={{
-              fontFamily: 'var(--font-playfair)',
+              fontFamily: 'var(--font-display)',
               fontSize: 'clamp(2.5rem, 5vw, 4rem)',
               lineHeight: 1.0,
             }}

@@ -98,7 +98,7 @@ function LoginForm() {
         <Link
           href="/"
           className="font-black text-2xl tracking-tight transition-opacity hover:opacity-70"
-          style={{ fontFamily: 'var(--font-playfair)', color: '#EDEBE8' }}
+          style={{ fontFamily: 'var(--font-display)', color: '#EDEBE8' }}
         >
           Andén
         </Link>
@@ -113,7 +113,7 @@ function LoginForm() {
           <h2
             className="font-black tracking-[-0.03em] text-white mb-6"
             style={{
-              fontFamily: 'var(--font-playfair)',
+              fontFamily: 'var(--font-display)',
               fontSize: 'clamp(2rem, 3vw, 3rem)',
               lineHeight: 1.0,
             }}
@@ -144,7 +144,7 @@ function LoginForm() {
           <Link
             href="/"
             className="lg:hidden block font-black text-2xl tracking-tight mb-10 transition-opacity hover:opacity-70"
-            style={{ fontFamily: 'var(--font-playfair)', color: '#EDEBE8' }}
+            style={{ fontFamily: 'var(--font-display)', color: '#EDEBE8' }}
           >
             Andén
           </Link>
@@ -154,7 +154,7 @@ function LoginForm() {
             <h1
               className="font-black tracking-[-0.02em] text-white mb-2"
               style={{
-                fontFamily: 'var(--font-playfair)',
+                fontFamily: 'var(--font-display)',
                 fontSize: 'clamp(1.8rem, 3vw, 2.2rem)',
               }}
             >

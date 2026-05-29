@@ -44,7 +44,7 @@ export function Navbar() {
             href="/"
             className="font-black text-xl tracking-tight transition-opacity hover:opacity-70 shrink-0"
             style={{
-              fontFamily: 'var(--font-playfair)',
+              fontFamily: 'var(--font-display)',
               color: 'var(--color-signal)',
             }}
           >

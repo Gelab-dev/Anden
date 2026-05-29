@@ -270,7 +270,7 @@ function ActivityCard({
         <h3
           className="text-base font-bold leading-snug mb-3"
           style={{
-            fontFamily: 'var(--font-playfair)',
+            fontFamily: 'var(--font-display)',
             color: '#F5F0E8',
             letterSpacing: '-0.01em',
           }}

@@ -35,7 +35,7 @@ export function SolucionSection() {
           <h2
             className="mt-4 font-black leading-none tracking-[-0.03em]"
             style={{
-              fontFamily: 'var(--font-playfair)',
+              fontFamily: 'var(--font-display)',
               fontSize: 'clamp(2.4rem, 4vw, 3.5rem)',
               color: 'var(--color-ink)',
             }}
@@ -63,7 +63,7 @@ export function SolucionSection() {
               <div
                 className="text-[6rem] font-black leading-none mb-6 tabular-nums transition-colors duration-500"
                 style={{
-                  fontFamily: 'var(--font-playfair)',
+                  fontFamily: 'var(--font-display)',
                   color: 'rgba(26,26,26,0.2)',
                 }}
               >

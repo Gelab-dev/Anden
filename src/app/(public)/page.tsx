@@ -129,7 +129,7 @@ export default async function HomePage() {
           </p>
           <h1
             className="text-4xl md:text-6xl font-black text-cream tracking-[-0.03em] leading-tight mb-4"
-            style={{ fontFamily: 'var(--font-playfair)' }}
+            style={{ fontFamily: 'var(--font-display)' }}
           >
             La vida real de cada<br />
             <em className="italic text-[var(--color-signal)]">destino argentino.</em>
@@ -149,7 +149,7 @@ export default async function HomePage() {
           </p>
           <h2
             className="text-2xl font-bold text-cream tracking-[-0.02em] mb-6"
-            style={{ fontFamily: 'var(--font-playfair)' }}
+            style={{ fontFamily: 'var(--font-display)' }}
           >
             ¿A dónde vas?
           </h2>
@@ -172,7 +172,7 @@ export default async function HomePage() {
           </p>
           <h2
             className="text-2xl font-bold text-cream tracking-[-0.02em] mb-6"
-            style={{ fontFamily: 'var(--font-playfair)' }}
+            style={{ fontFamily: 'var(--font-display)' }}
           >
             Lo mejor de ahora
           </h2>
@@ -200,7 +200,7 @@ export default async function HomePage() {
             </p>
             <h3
               className="text-2xl font-bold text-cream tracking-[-0.02em] mb-2"
-              style={{ fontFamily: 'var(--font-playfair)' }}
+              style={{ fontFamily: 'var(--font-display)' }}
             >
               ¿Tu ciudad no está en Andén?
             </h3>
@@ -220,7 +220,7 @@ export default async function HomePage() {
         </p>
         <h2
           className="text-2xl font-bold text-cream tracking-[-0.02em] mb-3"
-          style={{ fontFamily: 'var(--font-playfair)' }}
+          style={{ fontFamily: 'var(--font-display)' }}
         >
           ¿Organizás actividades?
         </h2>

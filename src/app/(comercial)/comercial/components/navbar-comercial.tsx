@@ -47,7 +47,7 @@ export function NavbarComercial() {
             }}
             className="font-black text-3xl tracking-tight transition-opacity hover:opacity-70"
             style={{
-              fontFamily: 'var(--font-playfair)',
+              fontFamily: 'var(--font-display)',
               color: 'var(--color-ink)',
             }}
           >
@@ -134,7 +134,7 @@ export function NavbarComercial() {
                 transition={{ delay: i * 0.06, duration: 0.3 }}
                 className="text-2xl font-bold"
                 style={{
-                  fontFamily: 'var(--font-playfair)',
+                  fontFamily: 'var(--font-display)',
                   color: 'var(--color-ink)',
                 }}
                 onClick={() => setMenuOpen(false)}

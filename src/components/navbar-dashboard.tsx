@@ -32,7 +32,7 @@ export function NavbarDashboard({ userName }: { userName?: string | null }) {
             href="/dashboard"
             className="font-black text-xl tracking-tight transition-opacity hover:opacity-70"
             style={{
-              fontFamily: 'var(--font-playfair)',
+              fontFamily: 'var(--font-display)',
               color: '#EDEBE8',
             }}
           >
@@ -141,7 +141,7 @@ export function NavbarDashboard({ userName }: { userName?: string | null }) {
                   href={link.href}
                   className="text-2xl font-bold"
                   style={{
-                    fontFamily: 'var(--font-playfair)',
+                    fontFamily: 'var(--font-display)',
                     color: pathname === link.href ? 'var(--color-sand)' : '#EDEBE8',
                   }}
                   onClick={() => setMenuOpen(false)}

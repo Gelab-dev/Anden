@@ -38,7 +38,7 @@ export function StickyBar() {
           <span
             className="text-[20vw] font-black leading-none tracking-tighter opacity-[0.035]"
             style={{
-              fontFamily: 'var(--font-playfair)',
+              fontFamily: 'var(--font-display)',
               color: 'var(--color-ink)',
             }}
           >
@@ -78,7 +78,7 @@ export function StickyBar() {
             <h2
               className="font-black leading-[0.95] tracking-[-0.04em] mb-8"
               style={{
-                fontFamily: 'var(--font-playfair)',
+                fontFamily: 'var(--font-display)',
                 fontSize: 'clamp(3rem, 6vw, 5.5rem)',
                 color: 'var(--color-ink)',
               }}

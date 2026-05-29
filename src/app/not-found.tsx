@@ -11,7 +11,7 @@ export default function NotFound() {
         className="absolute text-[20rem] font-black leading-none select-none pointer-events-none"
         style={{
           color: 'rgba(255,255,255,0.02)',
-          fontFamily: 'var(--font-playfair)',
+          fontFamily: 'var(--font-display)',
         }}
         aria-hidden="true"
       >
@@ -29,7 +29,7 @@ export default function NotFound() {
         <h1
           className="font-black tracking-[-0.03em] text-white mb-4"
           style={{
-            fontFamily: 'var(--font-playfair)',
+            fontFamily: 'var(--font-display)',
             fontSize: 'clamp(2.5rem, 5vw, 4rem)',
             lineHeight: 1.0,
           }}

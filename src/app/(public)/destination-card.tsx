@@ -76,7 +76,7 @@ export function DestinationCard({
         </p>
         <h3
           className="text-xl font-bold text-cream tracking-[-0.02em] mb-3 leading-tight"
-          style={{ fontFamily: 'var(--font-playfair)' }}
+          style={{ fontFamily: 'var(--font-display)' }}
         >
           {name}
         </h3>

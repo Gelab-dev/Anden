@@ -136,7 +136,7 @@ export default async function DashboardPage() {
             </p>
             <h1
               className="text-4xl md:text-5xl font-black tracking-[-0.03em] mb-4"
-              style={{ fontFamily: 'var(--font-playfair)', color: '#EDEBE8' }}
+              style={{ fontFamily: 'var(--font-display)', color: '#EDEBE8' }}
             >
               Bienvenido a Andén
             </h1>
@@ -176,7 +176,7 @@ export default async function DashboardPage() {
                       ? 'transparent'
                       : 'linear-gradient(135deg,#C4956A,#8A5A3A)',
                     color: '#fff',
-                    fontFamily: 'var(--font-playfair)',
+                    fontFamily: 'var(--font-display)',
                   }}
                 >
                   {provider.logoUrl ? (
@@ -200,7 +200,7 @@ export default async function DashboardPage() {
                   </p>
                   <h1
                     className="text-2xl md:text-4xl font-black tracking-[-0.03em] leading-none"
-                    style={{ fontFamily: 'var(--font-playfair)', color: '#EDEBE8' }}
+                    style={{ fontFamily: 'var(--font-display)', color: '#EDEBE8' }}
                   >
                     {provider.name}
                   </h1>
@@ -261,7 +261,7 @@ export default async function DashboardPage() {
                   <span
                     className="text-4xl font-black tracking-tight leading-none"
                     style={{
-                      fontFamily: 'var(--font-playfair)',
+                      fontFamily: 'var(--font-display)',
                       color: stat.accent ? 'var(--color-sand)' : '#EDEBE8',
                     }}
                   >
@@ -333,7 +333,7 @@ export default async function DashboardPage() {
                           <p
                             className="font-bold text-base truncate mb-2 leading-tight"
                             style={{
-                              fontFamily: 'var(--font-playfair)',
+                              fontFamily: 'var(--font-display)',
                               color: '#EDEBE8',
                             }}
                           >

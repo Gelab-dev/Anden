@@ -40,7 +40,7 @@ export function ComoFuncionaSection() {
           <h2
             className="mt-4 font-black leading-none tracking-[-0.03em]"
             style={{
-              fontFamily: 'var(--font-playfair)',
+              fontFamily: 'var(--font-display)',
               fontSize: 'clamp(2.4rem, 4vw, 3.5rem)',
               color: 'var(--color-ink)',
             }}

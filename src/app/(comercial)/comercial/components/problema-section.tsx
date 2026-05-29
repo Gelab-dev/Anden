@@ -27,7 +27,7 @@ export function ProblemaSection() {
         className="absolute -right-8 top-1/2 -translate-y-1/2 text-[20rem] font-black leading-none select-none pointer-events-none"
         style={{
           color: 'rgba(26,26,26,0.03)',
-          fontFamily: 'var(--font-playfair)',
+          fontFamily: 'var(--font-display)',
         }}
         aria-hidden="true"
       >
@@ -52,7 +52,7 @@ export function ProblemaSection() {
           <h2
             className="mt-4 font-black leading-none tracking-[-0.03em]"
             style={{
-              fontFamily: 'var(--font-playfair)',
+              fontFamily: 'var(--font-display)',
               fontSize: 'clamp(2.4rem, 4vw, 3.5rem)',
               color: 'var(--color-ink)',
             }}
@@ -80,7 +80,7 @@ export function ProblemaSection() {
               <span
                 className="text-[clamp(3rem,5vw,5rem)] font-black leading-none tabular-nums transition-colors duration-500"
                 style={{
-                  fontFamily: 'var(--font-playfair)',
+                  fontFamily: 'var(--font-display)',
                   color: 'rgba(26,26,26,0.2)',
                 }}
               >

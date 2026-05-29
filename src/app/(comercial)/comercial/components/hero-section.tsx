@@ -86,7 +86,7 @@ export function HeroSection() {
             <h1
               className="font-black tracking-[-0.03em] mb-6"
               style={{
-                fontFamily: 'var(--font-playfair)',
+                fontFamily: 'var(--font-display)',
                 fontSize: 'clamp(2.2rem, 4vw, 4rem)',
                 color: 'var(--color-ink)',
                 lineHeight: 1.08,

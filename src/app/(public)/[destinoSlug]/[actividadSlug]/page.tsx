@@ -234,7 +234,7 @@ export default async function ActividadPage({ params }: PageProps) {
             <h1
               className="font-black tracking-[-0.03em] text-cream mb-4"
               style={{
-                fontFamily: 'var(--font-playfair)',
+                fontFamily: 'var(--font-display)',
                 fontSize: 'clamp(2rem, 4.5vw, 3.5rem)',
                 lineHeight: 1.04,
                 textShadow: '0 2px 24px rgba(0,0,0,0.4)',
@@ -349,7 +349,7 @@ export default async function ActividadPage({ params }: PageProps) {
                   style={{
                     background: actividad.provider.logoUrl ? 'transparent' : 'linear-gradient(135deg,#C4956A,#8A5A3A)',
                     color: '#fff',
-                    fontFamily: 'var(--font-playfair)',
+                    fontFamily: 'var(--font-display)',
                   }}
                 >
                   {actividad.provider.logoUrl ? (
@@ -397,7 +397,7 @@ export default async function ActividadPage({ params }: PageProps) {
                   </p>
                   <p
                     className="text-3xl font-black tracking-[-0.03em]"
-                    style={{ fontFamily: 'var(--font-playfair)', color: '#F5F0E8' }}
+                    style={{ fontFamily: 'var(--font-display)', color: '#F5F0E8' }}
                   >
                     {price}
                   </p>

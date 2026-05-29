@@ -189,7 +189,7 @@ export function HeroSection({
           <span
             className="block font-black tracking-[-0.03em] text-cream leading-[1.02]"
             style={{
-              fontFamily: 'var(--font-playfair)',
+              fontFamily: 'var(--font-display)',
               fontSize: 'clamp(2.6rem, 5.5vw, 4rem)',
               textShadow: '0 2px 24px rgba(0,0,0,0.4)',
             }}
@@ -199,7 +199,7 @@ export function HeroSection({
           <span
             className="block font-black tracking-[-0.03em] text-[var(--color-signal)] leading-[1.02] italic"
             style={{
-              fontFamily: 'var(--font-playfair)',
+              fontFamily: 'var(--font-display)',
               fontSize: 'clamp(2.6rem, 5.5vw, 4rem)',
               textShadow: '0 2px 24px rgba(0,0,0,0.3)',
             }}
