@@ -108,7 +108,7 @@ export function SolucionSection() {
               className=" cursor-pointer px-8 py-4 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:opacity-90 hover:scale-[1.02]"
               style={{
                 background: 'var(--color-signal)',
-                color: 'var(--color-cream)',
+                color: 'var(--color-board)',
               }}
             >
               Empezar gratis

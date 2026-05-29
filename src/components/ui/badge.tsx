@@ -9,23 +9,23 @@ const badgeVariants = cva(
       variant: {
         // Estados de actividades (el diferenciador de Andén)
         operating:
-          'bg-[var(--color-status-operating)]/10 text-[var(--color-status-operating)] border border-[var(--color-status-operating)]/20',
+          'bg-[var(--color-activo)]/10 text-[var(--color-activo)] border border-[var(--color-activo)]/20',
         
         limited:
-          'bg-[var(--color-status-limited)]/10 text-[var(--color-status-limited)] border border-[var(--color-status-limited)]/20',
+          'bg-[var(--color-demorado)]/10 text-[var(--color-demorado)] border border-[var(--color-demorado)]/20',
         
         closed:
-          'bg-[var(--color-status-closed)]/10 text-[var(--color-status-closed)] border border-[var(--color-status-closed)]/20',
+          'bg-[var(--color-completo)]/10 text-[var(--color-completo)] border border-[var(--color-completo)]/20',
         
         soldOut:
-          'bg-[var(--color-status-sold-out)]/10 text-[var(--color-status-sold-out)] border border-[var(--color-status-sold-out)]/20',
+          'bg-[var(--color-completo)]/10 text-[var(--color-completo)] border border-[var(--color-completo)]/20',
         
         // Badges genéricos
         info:
           'bg-blue-500/10 text-blue-400 border border-blue-500/20',
         
         neutral:
-          'bg-gray-500/10 text-gray-300 border border-gray-500/20',
+          'bg-white/5 text-cream/45 border border-[var(--color-board-line)]',
       },
     },
     defaultVariants: {

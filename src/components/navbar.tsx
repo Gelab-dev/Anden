@@ -30,7 +30,7 @@ export function Navbar() {
       <nav
         className="sticky top-0 z-50 transition-all duration-300"
         style={{
-          background: scrolled ? 'rgba(13,27,42,0.95)' : 'rgba(13,27,42,0.8)',
+          background: scrolled ? 'rgba(23,20,15,0.95)' : 'rgba(23,20,15,0.8)',
           backdropFilter: 'blur(12px)',
           borderBottom: scrolled
             ? '1px solid rgba(255,255,255,0.06)'
@@ -168,7 +168,7 @@ export function Navbar() {
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] as MotionTransition['ease'] }}
             className="fixed top-16 inset-x-0 z-40 px-6 py-8 flex flex-col gap-6"
             style={{
-              background: 'rgba(13,27,42,0.98)',
+              background: 'rgba(23,20,15,0.98)',
               backdropFilter: 'blur(16px)',
               borderBottom: '1px solid rgba(255,255,255,0.06)',
             }}

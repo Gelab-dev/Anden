@@ -87,7 +87,7 @@ export default async function DestinoPage({ params }: PageProps) {
   const resto = activitiesData.filter((a) => a.status !== 'OPERATING');
 
   return (
-    <div className="min-h-screen bg-dark-900">
+    <div className="min-h-screen" style={{ background: 'var(--color-board)' }}>
 
       {/* Header del destino */}
       <section
@@ -97,11 +97,11 @@ export default async function DestinoPage({ params }: PageProps) {
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'radial-gradient(ellipse 50% 80% at 0% 50%, rgba(0,217,192,0.04) 0%, transparent 70%)',
+            background: 'radial-gradient(ellipse 50% 80% at 0% 50%, rgba(255,159,28,0.04) 0%, transparent 70%)',
           }}
         />
         <div className="max-w-7xl mx-auto relative z-10">
-          <p className="text-xs font-mono tracking-[0.2em] uppercase text-gray-500 mb-4">
+          <p className="text-xs font-mono tracking-[0.2em] uppercase text-cream/30 mb-4">
             Andén · {destino.province}
           </p>
           <h1
@@ -115,7 +115,7 @@ export default async function DestinoPage({ params }: PageProps) {
             {destino.name}
           </h1>
           {destino.shortDescription && (
-            <p className="text-gray-400 max-w-xl leading-relaxed mb-6">
+            <p className="text-cream/45 max-w-xl leading-relaxed mb-6">
               {destino.shortDescription}
             </p>
           )}
@@ -124,15 +124,15 @@ export default async function DestinoPage({ params }: PageProps) {
           <div className="flex flex-wrap gap-6">
             <div className="flex items-center gap-2">
               <div className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-turquoise opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-turquoise" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-signal)] opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--color-signal)]" />
               </div>
-              <span className="text-sm text-gray-400">
-                <span className="text-white font-semibold">{operando.length}</span> operando ahora
+              <span className="text-sm text-cream/45">
+                <span className="text-cream font-semibold">{operando.length}</span> operando ahora
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-cream/30">
                 {activitiesData.length} actividades en total
               </span>
             </div>
@@ -144,10 +144,10 @@ export default async function DestinoPage({ params }: PageProps) {
       <section className="max-w-7xl mx-auto px-6 md:px-12 py-12">
         {activitiesData.length === 0 ? (
           <div className="text-center py-24">
-            <p className="text-gray-500 mb-2">
+            <p className="text-cream/35 mb-2">
               No hay actividades publicadas en {destino.name} todavía.
             </p>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-cream/25">
               Volvé pronto — estamos incorporando prestadores.
             </p>
           </div>
@@ -156,7 +156,7 @@ export default async function DestinoPage({ params }: PageProps) {
             {/* Operando ahora */}
             {operando.length > 0 && (
               <div>
-                <p className="text-xs font-mono tracking-[0.2em] uppercase text-turquoise mb-6">
+                <p className="text-xs font-mono tracking-[0.2em] uppercase text-[var(--color-signal)] mb-6">
                   Operando ahora
                 </p>
                 <div
@@ -177,7 +177,7 @@ export default async function DestinoPage({ params }: PageProps) {
             {/* Resto */}
             {resto.length > 0 && (
               <div>
-                <p className="text-xs font-mono tracking-[0.2em] uppercase text-gray-600 mb-6">
+                <p className="text-xs font-mono tracking-[0.2em] uppercase text-cream/25 mb-6">
                   Otras actividades
                 </p>
                 <div

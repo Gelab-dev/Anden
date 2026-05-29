@@ -23,7 +23,7 @@ const CardRoot = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     <div
       ref={ref}
       className={clsx(
-        'overflow-hidden rounded-xl border border-gray-700 bg-dark-800 transition-all hover:border-turquoise/40 hover:shadow-lg hover:shadow-turquoise/10',
+        'overflow-hidden rounded-xl border border-[var(--color-board-line)] bg-[var(--color-board-2)] transition-all hover:border-[var(--color-signal)]/25 hover:shadow-lg',
         className
       )}
       {...props}
@@ -51,7 +51,7 @@ const CardImage = forwardRef<HTMLDivElement, CardImageProps>(
       <div
         ref={ref}
         className={clsx(
-          'relative overflow-hidden bg-dark-700',
+          'relative overflow-hidden bg-[var(--color-board-3)]',
           aspectClasses[aspectRatio],
           className
         )}
@@ -98,7 +98,7 @@ const CardMeta = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLParagraphEl
   ({ className, ...props }, ref) => (
     <p
       ref={ref}
-      className={clsx('mt-1 text-sm text-gray-400', className)}
+      className={clsx('mt-1 text-sm text-cream/40', className)}
       {...props}
     />
   )
@@ -110,7 +110,7 @@ const CardDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLPara
   ({ className, ...props }, ref) => (
     <p
       ref={ref}
-      className={clsx('mt-3 text-sm text-gray-300 leading-relaxed', className)}
+      className={clsx('mt-3 text-sm text-cream/60 leading-relaxed', className)}
       {...props}
     />
   )
@@ -123,7 +123,7 @@ const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     <div
       ref={ref}
       className={clsx(
-        'flex items-center justify-between border-t border-gray-700 px-5 py-3',
+        'flex items-center justify-between border-t border-[var(--color-board-line)] px-5 py-3',
         className
       )}
       {...props}

@@ -7,7 +7,7 @@ import { StickyBar } from './components/sticky-bar';
 
 export default function ComercialPage() {
   return (
-    <main className="relative bg-dark-900 overflow-x-hidden">
+    <main className="relative overflow-x-hidden" style={{ background: 'var(--color-cream)' }}>
       <HeroSection />
       <ProblemaSection />
       <SolucionSection />

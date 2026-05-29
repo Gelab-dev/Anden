@@ -38,7 +38,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="text-sm font-semibold text-gray-200"
+            className="text-sm font-semibold text-cream/70"
           >
             {label}
             {props.required && <span className="ml-1 text-red-400">*</span>}
@@ -51,11 +51,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             type={inputType}
             className={clsx(
-              'h-11 w-full rounded-lg border bg-dark-700 px-4 text-base text-white placeholder:text-gray-500 transition-colors',
-              'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark-900',
+              'h-11 w-full rounded-lg border bg-[var(--color-board-3)] px-4 text-base text-cream placeholder:text-cream/30 transition-colors',
+              'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--color-board)]',
               hasError
-                ? 'border-red-500 focus:border-red-500 focus:ring-red-500/50'
-                : 'border-gray-600 focus:border-turquoise focus:ring-turquoise/50',
+                ? 'border-[var(--color-completo)] focus:border-[var(--color-completo)] focus:ring-[var(--color-completo)]/30'
+                : 'border-[var(--color-board-line)] focus:border-[var(--color-signal)] focus:ring-[var(--color-signal)]/30',
               'disabled:cursor-not-allowed disabled:opacity-50',
               isPassword && 'pr-11',
               className
@@ -67,7 +67,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200 transition-colors focus:outline-none"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-cream/40 hover:text-cream/70 transition-colors focus:outline-none"
               aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
             >
               {showPassword ? (
@@ -129,7 +129,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
 
         {hint && !error && (
-          <p className="text-sm text-gray-400">{hint}</p>
+          <p className="text-sm text-cream/40">{hint}</p>
         )}
       </div>
     );

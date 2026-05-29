@@ -172,7 +172,7 @@ export default async function ActividadPage({ params }: PageProps) {
   ].filter(Boolean) as { icon: React.ReactNode; text: string; mono?: boolean }[];
 
   return (
-    <div className="min-h-screen" style={{ background: '#0d1b2a' }}>
+    <div className="min-h-screen" style={{ background: 'var(--color-board)' }}>
 
       {/* ── Hero ── */}
       <div
