@@ -2,8 +2,8 @@
 
 > La vida real de cada destino argentino.
 
-**Versión:** v1.4 — MVP v1.0 completo  
-**Última actualización:** 2026-05-24
+**Versión:** v2.0 — Identidad "tablero de salidas" + reconciliación MVP
+**Última actualización:** 2026-05-28
 
 ---
 
@@ -25,11 +25,15 @@
 14. [Métricas de éxito](#14-métricas-de-éxito)
 15. [Equipo y roles](#15-equipo-y-roles)
 
+> **Nota:** el detalle completo de identidad de marca (logo, paleta exacta,
+> tipografía, voz, checklist) vive en `docs/BRAND.md`, que es la fuente canónica
+> para diseño. Las secciones 8–10 acá son el resumen estratégico.
+
 ---
 
 ## 1. Resumen ejecutivo
 
-**Andén** es una plataforma digital que centraliza la oferta turística y cultural de cada destino argentino en un feed vivo, actualizado en tiempo real por quienes organizan las actividades.
+**Andén** es una plataforma digital que centraliza la oferta turística y cultural de cada destino argentino en un feed vivo, actualizado en tiempo real por quienes organizan las actividades. Es el **tablero de salidas de cada ciudad**: te dice qué pasa hoy, a qué hora y en qué estado.
 
 Para el viajero es la única herramienta que muestra qué está pasando hoy en un destino, con información confiable y actualizada. Para el local es la forma más rápida de enterarse qué sucede en su propia ciudad sin depender de diez perfiles de Instagram. Para el prestador es visibilidad gratuita, leads directos por WhatsApp y herramientas de gestión que crecen con su negocio.
 
@@ -203,9 +207,30 @@ Este es el núcleo del producto. La promesa de Andén es que la información es 
 
 **Comportamiento por defecto:** las actividades recurrentes arrancan en estado Activo. El prestador solo interviene cuando algo cambia — no tiene que confirmar cada día que todo está bien.
 
-**Recordatorio automático (post-MVP):** la noche anterior, Andén envía un mensaje al prestador por WhatsApp: *"Mañana tenés [actividad] a las [hora]. ¿Sale? Respondé SÍ o CANCELAR."* Sin respuesta en X horas → estado de alerta visible en el feed.
+### Indicador de frescura (MVP) — cómo sostenemos la promesa sin Twilio
 
-**A largo plazo:** el agente de IA (Capa 3 del modelo de negocio) actualiza el estado automáticamente según disponibilidad, respuestas del prestador y condiciones externas.
+El estado "Activo" por sí solo no significa "confirmado hoy": significa "nadie dijo lo contrario". Un prestador que se registra y se olvida deja actividades "Activo" eternas, y eso erosiona la confianza que es toda la propuesta de Andén.
+
+Por eso, **desde el MVP**, cada actividad guarda `lastConfirmedAt` y el feed lo muestra como tiempo relativo, en mono:
+
+- "Confirmado hace 2 h" → verde, confiable.
+- "Sin confirmar hace 4 días" → atenuado, el viajero decide con esa información.
+
+Una acción de un toque en el dashboard ("Confirmar para hoy") actualiza el timestamp. No obliga al prestador a tocar nada cada día, pero no le miente al viajero. Es la mitad del valor del recordatorio automático, gratis y disponible en v1. El recordatorio por WhatsApp (post-MVP) automatiza esta confirmación; el agente de IA (Capa 3) la deriva al sistema.
+
+### Orden del feed (definición de producto, no de implementación)
+
+En un producto "qué hago hoy", el orden por defecto **es** el producto. Orden canónico:
+
+1. Relevante ahora — en curso o próximo en el día.
+2. Frescura — `lastConfirmedAt` más reciente primero.
+3. Proximidad — cuando haya geolocalización (post-MVP).
+
+Se de-rankea lo stale (sin confirmar hace >7 días) y lo no verificado. Nunca se muestra primero algo viejo solo porque es "Activo".
+
+### Control de calidad y anti-spam
+
+Un prestador no verificado está limitado a **3 actividades activas** hasta pasar a VERIFIED. Esto evita que se inunde el feed con publicaciones falsas antes del control humano. La verificación se hace desde un panel admin (rol ADMIN), no desde la base de datos a mano.
 
 ### Políticas obligatorias en el perfil
 
@@ -216,13 +241,21 @@ Para que Andén sea una plataforma confiable y no un directorio, todo prestador 
 - **Devolución** — ¿reintegro total, parcial, crédito?
 - **Condiciones especiales** — clima, edad mínima, condición física, qué incluye
 
-Esto protege al viajero, genera confianza y alimenta al agente de IA en fases futuras.
+**Sin matar el onboarding:** la primera actividad se publica con campos mínimos. Las políticas completas son requisito para pasar a **VERIFIED** (y por lo tanto para aparecer en el feed público), no para publicar por primera vez. Así se resuelve la tensión entre construir confianza y el objetivo de "<10 min a primera publicación".
+
+### Recordatorio automático (post-MVP)
+
+La noche anterior, Andén envía un mensaje al prestador por WhatsApp: *"Mañana tenés [actividad] a las [hora]. ¿Sale? Respondé SÍ o CANCELAR."* Sin respuesta en X horas → la frescura cae y el feed lo refleja. A largo plazo, el agente de IA (Capa 3) actualiza el estado automáticamente.
+
+### Internacionalización
+
+Madryn es uno de los destinos con más tráfico internacional del país (ballenas). El modelo de datos se estructura **bilingüe desde el MVP** (campos i18n-ready), y el inglés en las fichas de actividad sale temprano en Fase 2, priorizado para Madryn. Implementación con `next-intl` sobre `proxy.ts` (Next 16).
 
 ### Estrategia de adquisición de usuarios
 
-**QR físico en puntos de llegada:** terminal de ómnibus, lobby de hoteles, oficina de turismo. "Escaneá y encontrá qué hacer hoy en [ciudad]." Costo casi cero, impacto directo en el momento exacto de llegada.
+**QR físico en puntos de llegada:** terminal de ómnibus, lobby de hoteles, oficina de turismo. "Escaneá y encontrá qué hacer hoy en [ciudad]." Costo casi cero, impacto directo en el momento exacto de llegada. **Este material lleva tratamiento de marca** (no un QR pelado) — ver `BRAND.md`.
 
-**SEO local específico:** "qué hacer en Puerto Madryn este fin de semana", "actividades en Madryn hoy". Si Andén aparece primero en esa búsqueda, la adquisición se resuelve sola.
+**SEO local específico:** "qué hacer en Puerto Madryn este fin de semana", "actividades en Madryn hoy". Si Andén aparece primero en esa búsqueda, la adquisición se resuelve sola. Por ser el motor de adquisición principal, **el SEO técnico está dentro del MVP** (ver Roadmap, Fase 1), no en post-MVP.
 
 **Los prestadores como canal:** cada negocio registrado tiene incentivo para decirle a sus clientes "encontranos en Andén". El perfil de Andén es más completo, actualizado y confiable que cualquier bio de Instagram. Con el tiempo, lo derivan naturalmente.
 
@@ -231,6 +264,10 @@ Esto protege al viajero, genera confianza y alimenta al agente de IA en fases fu
 - No procesa pagos ni maneja dinero. El cierre de la transacción es entre el prestador y el cliente.
 - No hace reservas formales. El contacto es por WhatsApp directo.
 - No cobra comisiones. Ni ahora ni en el futuro inmediato.
+
+### Legal y privacidad (bloqueante de lanzamiento público)
+
+Andén maneja números de WhatsApp (dato personal) y usa analytics. Antes del primer deploy público, son obligatorios: términos y condiciones, política de privacidad acorde a la **Ley 25.326 de Protección de Datos Personales**, y consentimiento de cookies/analytics. Es coherente con el valor de "sin recolección innecesaria" y no es opcional.
 
 ---
 
@@ -241,6 +278,11 @@ Andén es un marketplace de dos lados. Esto define cada decisión estratégica:
 **El local es el motor de retención. El viajero es el motor de monetización futura.**
 
 Si el feed está vivo porque los locales lo usan cada semana, cuando el turista llega encuentra una plataforma activa. Sin locales, el feed se ve muerto para el viajero.
+
+> **Arranque en frío:** por eso el lanzamiento en Madryn arranca por **una sola
+> vertical densa** (avistajes + excursiones marítimas) hasta que el feed se vea
+> vivo, en vez de 20 prestadores dispersos en 16 categorías que dan sensación de
+> vacío. Densidad primero, amplitud después. Ver Roadmap.
 
 ### Usuario final (viajero y local)
 
@@ -326,6 +368,12 @@ Gelab es la agencia de desarrollo web y automatizaciones que provee la tecnolog�
 
 La aparición de Gelab en la comunicación de Andén es discreta ("powered by Gelab") hasta que ambas marcas tengan peso propio. El usuario de Andén no necesita entender la arquitectura — solo que el sistema funciona.
 
+> **Framing de confianza:** Andén se para como user-first (sin venta de datos, sin
+> comisiones) y a la vez es canal de adquisición de Gelab. Para que no se lea como
+> "el negocio real es venderle IA al prestador", la IA se comunica siempre como
+> beneficio del prestador (responde por vos 24/7), nunca como producto empujado al
+> usuario final. La Capa 3 es opt-in y de valor medible.
+
 ### Tracking de conversiones
 
 **MVP:** links de WhatsApp con redirect propio de Andén para registrar el evento de contacto. El viajero llega igual a WhatsApp, Andén sabe que hubo una consulta.
@@ -343,46 +391,40 @@ La aparición de Gelab en la comunicación de Andén es discreta ("powered by Ge
 
 ## 8. Identidad de marca
 
+> Resumen estratégico. Detalle canónico (logo, usos, paleta exacta, checklist) en `docs/BRAND.md`.
+
+### La línea
+
+**Andén es el tablero de salidas de cada ciudad.**
+
+El sistema de estados en tiempo real del producto *es* un tablero de salidas:
+información que cambia en vivo y en la que se confía ahora. La metáfora unifica el
+impulso "tiempo real" y el impulso "editorial cálido" sin obligar a elegir, y
+organiza color, tipografía, voz y logo.
+
 ### Nombre
 
-**Andén**
-
-Pronunciado /an-dén/, con énfasis en la "e".
-
-### Significado
-
-El andén es el punto de encuentro y partida de los viajes. Es donde la espera se convierte en movimiento, donde las personas coinciden antes de transformar su rutina en experiencia.
-
-- **Encuentro** — entre viajeros y prestadores, entre personas y lugares.
-- **Movimiento** — el comienzo de un trayecto.
-- **Argentinidad** — referencia ferroviaria, parte de la historia del país.
-- **Conexión** — los andenes unen lugares y momentos.
-
-Bonus fonético: "Andén" remite a "Andes", anclando la marca al territorio argentino sin volverla regionalista.
+**Andén** — /an-dén/. El punto de encuentro y de partida. Encuentro, movimiento,
+argentinidad ferroviaria, conexión. Bonus fonético: remite a "Andes". Se escribe
+siempre con tilde y mayúscula inicial; nunca en caja alta.
 
 ### Tagline
 
-> **La vida real de cada destino argentino.**
+> **La vida real de cada destino argentino.** (institucional)
+> **El tablero de salidas de cada ciudad.** (línea de marca, uso editorial)
+> **Viví la ciudad como la vive su gente.** (emocional, usuario)
 
-Alternativa emocional para comunicaciones de usuario:
-> **Viví la ciudad como la vive su gente.**
+### Personalidad
 
-### Personalidad de marca
-
-- **Moderna sin ser pretenciosa.** Contemporánea pero con identidad propia, no copia de Silicon Valley.
-- **Directa sin ser fría.** Habla claro, en argentino, sin tecnicismos.
-- **Confiable sin ser corporativa.** Inspira seguridad, pero no es solemne ni acartonada.
-- **Energética sin ser frenética.** Tiene impulso, pero respeta el ritmo del usuario.
-- **Argentina sin folclorismo.** Local, pero de pretensión universal.
+Moderna sin pretenciosa · Directa sin fría · Confiable sin corporativa · Energética
+sin frenética · Argentina sin folclorismo. El tablero de estación encarna las cinco.
 
 ### Segmentación de comunicación por audiencia
-
-Andén es una marca, pero habla distinto según a quién le habla. Misma identidad visual, tono ajustado al contexto:
 
 | Dimensión | Viajero / Local | Prestador |
 |-----------|-----------------|-----------|
 | Tono | Emocional, descubrimiento | Racional, ROI, confianza |
-| Promesa | "Encontrá algo increíble para hacer hoy" | "Llegá al cliente en el momento exacto" |
+| Promesa | "Encontrá algo para hacer hoy" | "Llegá al cliente en el momento exacto" |
 | Canal | Feed, redes sociales, QR físico | LinkedIn, gremios, referidos directos |
 | UX | Exploración rápida, visual | Onboarding guiado, panel claro |
 
@@ -390,94 +432,69 @@ Andén es una marca, pero habla distinto según a quién le habla. Misma identid
 
 ## 9. Sistema visual
 
-### Paleta de colores
+> Resumen. Tokens exactos, logo y reglas de uso en `docs/BRAND.md` y `globals.css`.
 
-#### Marca — oscuros
+### Los tres mundos, un solo idioma
 
-| Token | Hex | Uso |
-|-------|-----|-----|
-| `night` | `#060B14` | Fondos profundos, footer, hero base |
-| `dark` | `#0D1B2A` | Primario de marca, fondos oscuros |
-| `dark-2` | `#162C3D` | Variación intermedia, transiciones |
-| `dark-3` | `#1E3A52` | Variación clara, mockups, surfaces |
+Feed y dashboard viven en **el tablero** (oscuro cálido). La landing comercial vive
+en **el boleto** (crema). Las tres comparten acento ámbar y las tres tipografías, así
+que el usuario nunca siente que cambió de app.
 
-#### Acento — turquesa eléctrico
+### Paleta
 
-| Token | Hex | Uso |
-|-------|-----|-----|
-| `accent` | `#00D9C0` | CTAs primarios, links, badges, marca |
-| `accent-bright` | `#00FFE0` | Glow effects, hovers, momentos de impacto |
-| `accent-soft` | `rgba(0,217,192,0.15)` | Fondos sutiles, badges con transparencia |
+| Familia | Token | Hex | Uso |
+|---------|-------|-----|-----|
+| Tablero | `board` | `#17140F` | Fondo feed + dashboard (negro cálido, no navy) |
+| Boleto | `cream` | `#F4ECDC` | Fondo landing |
+| Señal | `signal` | `#FF9F1C` | Acento, CTAs, "en vivo" (reemplaza el turquesa) |
+| Estado | `activo` / `demorado` / `completo` / `suspendido` | `#1FA866` / `#F2C94C` / `#E5484D` / `#8A8378` | Estados de actividad |
 
-#### Estados del sistema
-
-| Token | Hex | Uso |
-|-------|-----|-----|
-| `success` | `#10B981` | Activo, abierto, confirmaciones |
-| `warning` | `#F59E0B` | Demorado, cupo limitado, cambios |
-| `danger` | `#EF4444` | Cancelado, suspendido, errores |
-| `purple` | `#8B5CF6` | Eventos con fecha específica |
-| `info` | `#3B82F6` | Información general, exposiciones |
+Los estados del producto **son** la paleta de estado. El color nunca va solo:
+siempre con etiqueta de texto (AA).
 
 ### Tipografía
 
-**Familia:** Inter (Google Fonts, variable).
+- **Bricolage Grotesque** — títulos (reemplaza Playfair).
+- **DM Sans** — UI y cuerpo (se conserva del build).
+- **DM Mono** — datos: horas, cupos, estados, contadores. El gancho conceptual.
 
-**Escala de pesos:** 400 (cuerpo) → 500 (meta) → 600 (subtítulos) → 700 (botones) → 800 (títulos) → 900 (heroes).
+### Logo
 
-**Letter-spacing:** negativo en títulos grandes (-1.5px a -3px), positivo en etiquetas uppercase (+1.5px).
+Isotipo de solapa de tablero con chevron ámbar (próxima salida / la "A") sobre la
+línea del borde del andén. Wordmark "Andén" con punto-señal ámbar. Archivos en
+`docs/brand/`.
 
-### Convenciones de código
+### Animación y glass
 
-- Archivos y carpetas: `kebab-case` (ej: `hero-section.tsx`, `landing.data.ts`)
-- Componentes exportados: `PascalCase` dentro del archivo
-- Hooks: `camelCase` con prefijo `use` (`useComercialScroll.ts`)
-- Sin guiones bajos en carpetas — usar nombres simples (`components/`, `hooks/`, `data/`)
-- `'use client'` solo donde hay event handlers, hooks o browser APIs
-
-### Animaciones
-
-- Interacciones (300-400ms): `cubic-bezier(0.34, 1.56, 0.64, 1)`
-- Entradas (500-1200ms): `cubic-bezier(0.16, 1, 0.3, 1)`
-- Ambient / loop (2-8s): `ease-in-out`
-- Todas se desactivan con `prefers-reduced-motion: reduce`
-
-### Glassmorphism
-
-Solo en elementos flotantes (navbar, modales, cards sobre hero). Nunca en superficies grandes.
+Micro-flip de solapa en cambios de estado (≤300ms). Sin glow ni neón: el ámbar es
+plano. Glassmorphism solo en flotantes. Todo respeta `prefers-reduced-motion`.
 
 ---
 
 ## 10. Tono y voz
 
-### Principios
+> Detalle y tabla completa en `docs/BRAND.md`.
 
-**Directo, no brusco.** Decimos las cosas claras, con cuidado del usuario.
+### Principio: escribí como un tablero de salidas
 
-**Argentino, no folclórico.** Voseo natural ("encontrá", "registrate"). Sin "viví la magia" ni jerga turística genérica.
+Presente, preciso, estado primero, hora exacta, cero relleno. El tablero no vende el
+viaje: dice qué sale, a qué hora y en qué estado.
 
-**Informativo, no aspiracional.** No vendemos sueños — describimos hechos. "Avistaje confirmado hoy 10:00" mejor que "viví la experiencia de tu vida".
+- **Directo, no brusco.** **Argentino, no folclórico** (voseo: "encontrá").
+  **Informativo, no aspiracional.** **Conciso, no telegráfico.** **Cero relleno corporativo.**
 
-**Conciso, no telegráfico.** Cortamos lo innecesario, pero no sacrificamos claridad ni calidez.
+| Contexto | Bien | Mal |
+|----------|------|-----|
+| Hero | "Qué hacés hoy en Madryn." | "Descubrí experiencias inolvidables." |
+| CTA | "Ver qué sale hoy" | "Comenzá tu próxima aventura" |
+| Estado | "Avistaje cancelado por viento. Te avisamos cuando se reprograme." | "Lamentablemente no estará disponible." |
+| Frescura | "Confirmado hace 2 h" | "Información posiblemente actualizada" |
+| Sin resultados | "No hay nada confirmado para hoy. Mirá mañana o cambiá de destino." | "Ups, no encontramos nada." |
 
-**Cero relleno corporativo.** Nada de "soluciones innovadoras", "ecosistemas conectados", "experiencias transformadoras".
+### Evitamos siempre
 
-### Ejemplos
-
-| Contexto | ✅ Bien | ❌ Mal |
-|----------|---------|--------|
-| Hero | "Toda Argentina, en un solo lugar." | "Descubrí experiencias inolvidables en cada rincón." |
-| CTA | "Explorar destinos" | "Comenzá tu próxima aventura" |
-| Estado | "Avistaje cancelado por viento. Te avisamos cuando se reprograme." | "Lamentablemente la experiencia no estará disponible hoy." |
-| Prestador | "Publicá tu evento en menos de 2 minutos." | "Únete a nuestra revolución turística." |
-| Sin resultados | "No hay actividades hoy. Probá mañana." | "Ups, parece que no encontramos nada." |
-
-### Lo que evitamos siempre
-
-- Emojis decorativos en UI principal.
-- Signos de exclamación múltiples.
-- Inglés cuando hay español natural ("pricing" → "precios").
-- Tecnicismos turísticos ("oferta hotelera", "demanda agregada").
+Emojis decorativos en UI principal · exclamaciones múltiples · inglés cuando hay
+español natural · tecnicismos turísticos · color de estado sin etiqueta.
 
 ---
 
@@ -493,7 +510,7 @@ Solo en elementos flotantes (navbar, modales, cards sobre hero). Nunca en superf
 | UI Library | React | 19.2.x |
 | Estilos | Tailwind CSS | 4.1.x (CSS-first) |
 | Componentes UI | shadcn/ui v4 + radix-ui | CLI v4 |
-| ORM | Prisma | 7.x |
+| ORM | Prisma | 7.x (+ `@prisma/adapter-pg`) |
 | Base de datos | PostgreSQL / Neon | PG 17 |
 | Auth | NextAuth v5 | 5.x |
 | Validación | Zod | 4.4.x |
@@ -505,68 +522,90 @@ Solo en elementos flotantes (navbar, modales, cards sobre hero). Nunca en superf
 | Storage | Vercel Blob | integrado |
 | Pagos AR | MercadoPago | última estable |
 | Pagos intl. | Stripe | última estable |
-| Errores | Sentry | última estable |
+| Errores | Sentry | última estable (cableado desde día 1) |
 | Analytics | Posthog Cloud | última estable |
+| i18n | next-intl | última estable |
 | Hosting | Vercel | integrado |
 | Package manager | pnpm | 10.x+ |
+| Tipografía | Bricolage Grotesque + DM Sans + DM Mono | Google Fonts (`next/font`) |
 | Iconografía | @tabler/icons-react | última estable |
+
+> **Política de versiones:** pinear versiones **exactas** en `package.json` + lockfile
+> (sin rangos `x` ni `^`). Next 16 / Prisma 7 / React 19 son majors recientes; ver
+> ADR sobre early-adoption. Cualquier bump de major pasa por su propio ADR.
 
 ### Notas críticas de versiones
 
-**Next.js 16:** `params`, `searchParams`, `cookies()`, `headers()` son async obligatorio.
+**Next.js 16:** `params`, `searchParams`, `cookies()`, `headers()` son async obligatorio. `middleware.ts` fue renombrado a **`proxy.ts`** (función exportada `proxy`, corre en Node.js runtime). El proxy es solo borde de red, "último recurso": **la autorización real va en un helper compartido llamado dentro de route handlers y server actions**, no en el proxy.
 
-**Tailwind v4:** sin `tailwind.config.js`. Tokens en CSS con `@theme {}`. `shrink-0` en lugar de `flex-shrink-0`. Gradientes con `bg-linear-to-b` en lugar de `bg-gradient-to-b`.
+**Tailwind v4:** sin `tailwind.config.js`. Tokens en CSS con `@theme {}`. `shrink-0` en lugar de `flex-shrink-0`. Gradientes con `bg-linear-to-b`.
 
 **Prisma 7:** sin binarios Rust. Requiere `@prisma/adapter-pg` obligatorio.
 
-**Motion 12:** importar desde `framer-motion`. `whileInView` para animaciones que se disparan, `useScroll` para animaciones que siguen el scroll.
+**Motion 12:** importar desde `framer-motion`. `whileInView` para disparar, `useScroll` para seguir el scroll.
 
-### Arquitectura
+### Arquitectura (estructura real, no aspiracional)
+
+El proyecto usa **Route Groups con componentes colocados**, no una carpeta `/features`
+por dominio. La organización real:
 
 ```
-/app                    → rutas (App Router)
-/components             → UI compartido (design system)
-/features               → lógica por dominio
-  /destinations
-  /activities
-  /providers
-  /users
-/lib                    → utils transversales (auth, db, mail)
-/prisma                 → schema y migraciones
+src/
+  app/
+    (public)/        → feed viajero (tablero oscuro)
+    (comercial)/     → landing prestadores (boleto crema)
+    (auth)/          → login / registro
+    (dashboard)/     → panel prestador (tablero oscuro)
+    api/             → route handlers
+  components/        → UI compartido (design system)
+  lib/               → auth, prisma, authz, utils
+  proxy.ts           → borde de red (antes middleware.ts)
 ```
+
+Los componentes específicos de una ruta se colocan junto a su `page.tsx`. Solo se
+extrae a una carpeta compartida cuando algo se usa en más de un route group. Esta es
+la convención vigente; `CONTRIBUTING.md` la detalla.
 
 ---
 
 ## 12. Arquitectura de información
 
-### Estructura de URLs
+### Estructura de URLs (rutas reales del MVP)
 
 ```
-anden.com.ar                              → Landing / home global
-anden.com.ar/destinos                     → Listado de destinos
-anden.com.ar/[destino]                    → Feed público del destino
-anden.com.ar/[destino]/[slug-actividad]   → Ficha pública de actividad
-anden.com.ar/explorar                     → Búsqueda global filtrable
-anden.com.ar/app/panel                    → Panel del prestador
-anden.com.ar/app/siguiendo                → Feed del viajero
-anden.com.ar/registro/prestador           → Registro de prestador
-anden.com.ar/ingresar                     → Login
-anden.com.ar/comercial                    → Landing para prestadores
+anden.com.ar/                              → home global (destinos activos)
+anden.com.ar/[destinoSlug]                 → feed público del destino
+anden.com.ar/[destinoSlug]/[actividadSlug] → ficha pública de actividad
+anden.com.ar/comercial                     → landing para prestadores
+anden.com.ar/login                         → login (+ ?modo=registro)
+anden.com.ar/dashboard                     → panel del prestador
+anden.com.ar/dashboard/crear-perfil        → onboarding del prestador
+anden.com.ar/dashboard/nueva-actividad     → publicar actividad
+anden.com.ar/dashboard/editar-actividad/[id] → editar actividad
 ```
+
+> Rutas planificadas a futuro (no en MVP): `/explorar` (búsqueda global filtrable),
+> `/dashboard/siguiendo` (feed del viajero). El buscador visual del MVP se reemplaza
+> por un filtro real de destino/categoría client-side (ver HANDOFF).
+
+### SEO (en el MVP)
+
+Sitemap dinámico, `schema.org` (Event para eventuales, LocalBusiness para prestadores),
+Open Graph dinámico por ficha, metadata por ruta. Es el motor de adquisición, no polish.
 
 ### Modelos de datos
 
 - **Destination** — ciudad o microregión con identidad turística.
-- **Provider** — persona o empresa que publica actividades.
-- **Activity** — unidad publicable. Tiene tipo (eventual/recurrente), estado y políticas.
+- **Provider** — persona o empresa que publica actividades. Tiene `status` (PENDING/VERIFIED) y `ownerId`.
+- **Activity** — unidad publicable. Tiene tipo (eventual/recurrente), estado, `lastConfirmedAt` y políticas.
 - **ActivityType** — eventual o recurrente.
 - **ActivityStatus** — activo, demorado, cupo completo, cancelado, suspendido.
 - **Category** — clasificación de actividad.
-- **User** — viajero registrado.
+- **User** — viajero registrado. Tiene `role` (TRAVELER/PROVIDER_OWNER/ADMIN).
 - **Follow** — relación usuario → actividad seguida.
 - **Review** — reseña verificada.
 - **Alert** — comunicado del prestador a sus seguidores.
-- **Media** — fotos de perfiles y actividades.
+- **Media** — fotos de perfiles y actividades (Vercel Blob).
 
 ---
 
@@ -574,29 +613,39 @@ anden.com.ar/comercial                    → Landing para prestadores
 
 ### Fase 0 — Cimientos ✅ COMPLETADA
 
-Stack completo funcionando: Next.js 16.2 + React 19 + TypeScript 5.8 + Tailwind v4 + Prisma 7 + NextAuth v5. Schema completo (15 tablas). Design system base (Button, Badge, Card, Input). Seed con 2 destinos y 16 categorías.
+Stack completo funcionando: Next.js 16.2 + React 19 + TypeScript 5.8 + Tailwind v4 + Prisma 7 + NextAuth v5. Schema completo (15 tablas). Design system base. Seed con 2 destinos y 16 categorías.
 
 ### Fase 1 — MVP público (en curso)
 
+**Producto**
 - Landing `/comercial` para captación de prestadores.
-- Feed público por destino.
+- Feed público por destino, con orden canónico e indicador de frescura (`lastConfirmedAt`).
 - Ficha pública de actividad.
-- Panel del prestador: perfil + publicación de actividades (eventuales y recurrentes) + cambio de estado.
-- Políticas de cancelación y cambios en el perfil del prestador.
-- Botón de contacto por WhatsApp con tracking de clicks.
-- SEO técnico (sitemap, schema.org, meta dinámicos, Open Graph).
+- Panel del prestador: perfil + publicación (eventuales/recurrentes) + cambio de estado + "Confirmar para hoy".
+- Políticas de cancelación/cambios como requisito de VERIFIED (no de primera publicación).
+- Botón de contacto por WhatsApp con tracking de clicks (redirect propio).
+- Filtro real de destino/categoría (reemplaza el buscador visual no funcional).
+- Empty states que redirigen (otros destinos, próximas, "avisame").
+
+**Técnico (bloqueantes de lanzamiento)**
+- SEO técnico: sitemap, schema.org, meta dinámicos, Open Graph.
+- Autorización por ownership en todas las mutaciones de actividad (anti-IDOR).
+- Panel admin (rol ADMIN) para verificar prestadores.
+- Sentry cableado. Versiones pineadas.
+- Legal: T&C, política de privacidad (Ley 25.326), consentimiento de cookies.
 - Deploy en producción con dominio `anden.com.ar`.
-- Datos iniciales: 10-20 actividades reales de Puerto Madryn.
+- Datos iniciales: una vertical densa de Puerto Madryn (avistajes + excursiones).
 
 ### Fase 2 — Validación en campo (Mes 3-4)
 
-- Onboarding manual de 20-30 prestadores en Puerto Madryn.
+- Onboarding manual de 20-30 prestadores en Puerto Madryn (ampliando verticales).
+- Inglés en fichas de actividad (priorizado Madryn).
 - Sistema de reseñas básico.
 - Cuenta de viajero con favoritos y seguimiento.
 - Notificaciones por email al cambiar estado de actividad seguida.
 - Recordatorio automático al prestador por WhatsApp (Twilio) la noche anterior.
 - Analytics para el prestador (visitas, clicks en contacto).
-- QR físicos en puntos de llegada de Madryn.
+- QR físicos (con tratamiento de marca) en puntos de llegada de Madryn.
 
 ### Fase 3 — Expansión a La Plata (Mes 5-6)
 
@@ -630,7 +679,7 @@ Stack completo funcionando: Next.js 16.2 + React 19 + TypeScript 5.8 + Tailwind 
 - Portal para entes de turismo (municipios, provincias, parques).
 - Reportes y analytics turísticos premium.
 - API pública para integraciones.
-- Internacionalización (inglés, portugués).
+- Internacionalización ampliada (portugués).
 
 ---
 
@@ -647,8 +696,8 @@ Stack completo funcionando: Next.js 16.2 + React 19 + TypeScript 5.8 + Tailwind 
 
 - **Tiempo a primera publicación** del prestador desde el registro — objetivo < 10 minutos.
 - **Tasa de conversión** visitante → click en WhatsApp — objetivo > 8% en fichas activas.
-- **Frescura del contenido** — % de actividades con estado actualizado en últimos 7 días. Objetivo > 80%.
-- **Performance** — Lighthouse > 90, LCP < 2.5s, CLS < 0.1.
+- **Frescura del contenido** — % de actividades con `lastConfirmedAt` en últimos 7 días. Objetivo > 80%. (Ahora medible directo gracias al timestamp.)
+- **Performance** — Lighthouse > 90, LCP < 2.5s, CLS < 0.1. Vigilar el costo del `mapa-3d` con parallax en mobile de gama media (lazy-load + reduced-motion).
 
 ### Métricas de negocio (a partir de Fase 4)
 
@@ -682,7 +731,9 @@ Stack completo funcionando: Next.js 16.2 + React 19 + TypeScript 5.8 + Tailwind 
 
 ## Historial de versiones
 
-- **v1.0** (mayo 2026) — Fundación inicial: identidad de marca, sistema visual, modelo de negocio, roadmap.
-- **v1.1** (mayo 2026) — Auditoría completa del stack tecnológico.
-- **v1.2** (mayo 2026) — Implementación completa de Fase 0. Cambio Better Auth → NextAuth v5.
-- **v1.3** (mayo 2026) — Actualización estratégica completa: posicionamiento de marca, diferenciador vs Instagram, segmentación viajero/local/prestador, dos tipos de actividades (eventual/recurrente), sistema de estados, políticas obligatorias, modelo de monetización en tres capas con Gelab, estrategia de lanzamiento piloto vs nacional, tracking de conversiones. Tagline actualizado.
+- **v1.0** (mayo 2026) — Fundación inicial: identidad, sistema visual, modelo de negocio, roadmap.
+- **v1.1** (mayo 2026) — Auditoría del stack tecnológico.
+- **v1.2** (mayo 2026) — Implementación de Fase 0. Better Auth → NextAuth v5.
+- **v1.3** (mayo 2026) — Actualización estratégica: posicionamiento, diferenciador vs Instagram, segmentación, dos tipos de actividad, sistema de estados, políticas, monetización en tres capas con Gelab, tracking. Tagline actualizado.
+- **v1.4** (mayo 2026) — MVP v1.0 completo (build).
+- **v2.0** (mayo 2026) — Identidad "tablero de salidas" (ámbar/board/crema, Bricolage+DM Sans+DM Mono, logo); detalle de marca movido a `BRAND.md`. Reconciliación con el build real: arquitectura por route groups, rutas reales, stack actualizado. Decisiones de producto resueltas: indicador de frescura `lastConfirmedAt` en MVP, orden del feed, anti-spam, onboarding mínimo. SEO y legal dentro de Fase 1. Arranque en frío por vertical densa. i18n estructurada.
