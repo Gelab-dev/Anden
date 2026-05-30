@@ -4,6 +4,7 @@
 import { put } from '@vercel/blob'
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
+import { isProvider } from '@/lib/authz'
 
 const MAX_SIZE_BYTES = 5 * 1024 * 1024 // 5 MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
@@ -11,8 +12,16 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
 export async function POST(req: Request) {
   // Autenticación — solo prestadores logueados pueden subir
   const session = await auth()
-  if (!session?.user) {
+  if (!session?.user?.id) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  }
+
+  // Autorización — el blob es público; restringir a prestadores (o admin)
+  if (!(await isProvider(session.user.id))) {
+    return NextResponse.json(
+      { error: 'Necesitás un perfil de prestador para subir imágenes' },
+      { status: 403 },
+    )
   }
 
   let formData: FormData

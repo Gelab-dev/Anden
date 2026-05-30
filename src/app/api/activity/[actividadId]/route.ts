@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
+import { findOwnedActivity } from '@/lib/authz';
 
 export async function GET(
   request: Request,
@@ -14,11 +14,7 @@ export async function GET(
 
     const { actividadId } = await params;
 
-    const activity = await prisma.activity.findFirst({
-      where: {
-        id: actividadId,
-        provider: { ownerId: session.user.id },
-      },
+    const activity = await findOwnedActivity(actividadId, session.user.id, {
       include: {
         media: { orderBy: { order: 'asc' } },
       },
