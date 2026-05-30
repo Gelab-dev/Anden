@@ -3,6 +3,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { findOwnedActivity } from '@/lib/authz'
 import { ActivityStatus } from '@prisma/client'
 
 const VALID_STATUSES: ActivityStatus[] = [
@@ -35,12 +36,7 @@ export async function PATCH(request: Request) {
     }
 
     // Verificar que la actividad pertenece al prestador autenticado
-    const activity = await prisma.activity.findFirst({
-      where: {
-        id: activityId,
-        provider: { ownerId: session.user.id },
-      },
-    })
+    const activity = await findOwnedActivity(activityId, session.user.id)
 
     if (!activity) {
       return NextResponse.json(
